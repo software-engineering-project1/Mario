@@ -5,7 +5,6 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
-import input.KeyInput;
 
 public class Game extends Canvas implements Runnable{
 	public static final int WIDTH=270;	
@@ -14,7 +13,6 @@ public class Game extends Canvas implements Runnable{
 	public static final String TITLE = "Mario";
 	private Thread thread;
 	private boolean running= false;
-	public static Handler handler;
 	
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
@@ -24,9 +22,6 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	private void init() {
-		 handler = new Handler();
-		 addKeyListener(new KeyInput());
-	
 		 
 	}
 	private synchronized void start() {
