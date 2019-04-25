@@ -14,7 +14,6 @@ public class Wall extends Tile{
 		
 	}
 	public void render(Graphics g) {
-		g.drawImage(Game.grass.getBufferedImage(), x, y, null );
 
 	}
 	public void tick() {

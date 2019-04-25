@@ -20,12 +20,7 @@ public class Player extends Entity {
 
 
 	public void render(Graphics g) {
-		if(facing==0) {
-			g.drawImage(Game.player[frame+5].getBufferedImage(), x, y,width,height, null );
 
-		}else if(facing==1){
-			g.drawImage(Game.player[frame].getBufferedImage(), x, y,width,height, null );
-		}
 	}
 
 	public void tick() {
