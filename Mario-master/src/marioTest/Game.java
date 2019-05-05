@@ -6,6 +6,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
@@ -69,6 +70,8 @@ public class Game extends Canvas implements Runnable{
 	}
 
 	public void run() {
+		init();
+		requestFocus();
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
 		double delta = 0;
@@ -98,10 +101,21 @@ public class Game extends Canvas implements Runnable{
 		
 	}
 	public void render( ) {
-
+		BufferStrategy bs= getBufferStrategy();
+		if ( bs==null) {
+			createBufferStrategy(3);
+			return;
+		}
+		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
+		handler.render(g);
+		
+		g.dispose();//dispose what we have created
+		bs.show();
 	}
 	public void tick() {//update
-	
+		handler.tick();
 	}
 
 	public static void main(String[] args) {
