@@ -10,14 +10,15 @@ public class KeyInput implements KeyListener{
 
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
-		for(Entity en: Game.handler.entity) {
+		for(Entity en:Game.handler.entity) {//handler in Game should be public 
 			switch(key) {
 			case KeyEvent.VK_W:
-				if(!en.jumping) {
-					en.jumping = true;
-					en.gravity = 10.0;
-				}
-				break;			
+				en.setVelY(-5);
+
+				break;
+			case KeyEvent.VK_S:
+				en.setVelY(5);
+				break;
 			case KeyEvent.VK_A:
 				en.setVelX(-5);
 				break;
@@ -26,12 +27,14 @@ public class KeyInput implements KeyListener{
 				break;
 			}
 		}
+
+		
 	}
 
+	@Override
 	public void keyReleased(KeyEvent e) {
-
 		int key = e.getKeyCode();
-		for(Entity en: Game.handler.entity) {
+		for(Entity en:Game.handler.entity) {//handler in Game should be public 
 			switch(key) {
 			case KeyEvent.VK_W:
 				en.setVelY(0);
@@ -40,15 +43,18 @@ public class KeyInput implements KeyListener{
 				en.setVelY(0);
 				break;
 			case KeyEvent.VK_A:
-				en.setVelX(-5);
+				en.setVelX(0);
 				break;
 			case KeyEvent.VK_D:
-				en.setVelX(5);
+				en.setVelX(0);
 				break;
 			}
 		}
 	}
-	public void keyTyped(KeyEvent e) {
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
 		//not using
+		
 	}
 }

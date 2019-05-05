@@ -1,41 +1,20 @@
 package marioTest;
 
 import java.awt.Canvas;
-<<<<<<< HEAD
-
-import java.awt.Color;
-=======
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
 
-<<<<<<< HEAD
-
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
-
-
-=======
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
 public class Game extends Canvas implements Runnable{
-	public static final int WIDTH=270;	
-	public static final int HEIGHT=WIDTH/14*10;
+	public static final int WIDTH=320;	
+	public static final int HEIGHT=180;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
-<<<<<<< HEAD
-	public static Handler handler;
-	private Thread thread;
-	private boolean running= false;
-	
-=======
 	private Thread thread;
 	private boolean running= false;
 	public static Handler handler;
 
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
 		setPreferredSize(size);
@@ -112,8 +91,4 @@ public class Game extends Canvas implements Runnable{
 
 
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
