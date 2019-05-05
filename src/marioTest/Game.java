@@ -1,41 +1,41 @@
 package marioTest;
 
 import java.awt.Canvas;
-<<<<<<< HEAD
+
 
 import java.awt.Color;
-=======
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+
+import javax.swing.JFrame;
+
+
+import input.KeyInput;
+import mario.entity.Player;
+import mariogfx.Sprite;
+import mariogfx.SpriteSheet;
+
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
 
-<<<<<<< HEAD
-
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
-
-
-=======
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
 public class Game extends Canvas implements Runnable{
 	public static final int WIDTH=270;	
 	public static final int HEIGHT=WIDTH/14*10;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
-<<<<<<< HEAD
-	public static Handler handler;
-	private Thread thread;
-	private boolean running= false;
-	
-=======
-	private Thread thread;
-	private boolean running= false;
-	public static Handler handler;
+	public static SpriteSheet sheet;
+	public static Camera cam;
 
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
+	public static Handler handler;
+	private Thread thread;
+	private boolean running= false;
+	public static Sprite grass;
+	public static Sprite player;
+	
+
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
 		setPreferredSize(size);
@@ -44,7 +44,14 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	private void init() {
-		 
+		 handler = new Handler();
+		 sheet = new SpriteSheet("/SpriteSheet.png");
+		 addKeyListener(new KeyInput());
+		 grass = new Sprite(sheet, 1, 1);
+		 player = new Sprite(sheet, 1, 16);
+
+		 handler.addEntity(new Player(300, 512, 32, 32, true, Id.player, handler));
+
 	}
 	private synchronized void start() {
 		if(running) return ;//if running is true you get out of this method
@@ -63,6 +70,8 @@ public class Game extends Canvas implements Runnable{
 	}
 
 	public void run() {
+		init();
+		requestFocus();
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
 		double delta = 0;
@@ -91,11 +100,22 @@ public class Game extends Canvas implements Runnable{
 		stop();
 		
 	}
-	public void render() {
-
+	public void render( ) {
+		BufferStrategy bs= getBufferStrategy();
+		if ( bs==null) {
+			createBufferStrategy(3);
+			return;
+		}
+		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
+		handler.render(g);
+		
+		g.dispose();//dispose what we have created
+		bs.show();
 	}
 	public void tick() {//update
-	
+		handler.tick();
 	}
 
 	public static void main(String[] args) {
@@ -111,9 +131,4 @@ public class Game extends Canvas implements Runnable{
 	}
 
 
-
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 740c431d37d94bc8d84f496572aa6d4e0ac122bf
