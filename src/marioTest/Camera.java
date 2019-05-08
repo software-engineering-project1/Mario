@@ -6,9 +6,9 @@ public class Camera {
 
 	public int x,y;
 
-	public void tick(Entity player) {
+	public void tick(Entity player) {//make the camera for the player
 		setX(-player.getX()+Game.WIDTH/2);
-		setY(-player.getY()+Game.WIDTH/2);
+		setY(-player.getY()+Game.HEIGHT/2);
 
 	}
 	public int getX() {

@@ -1,40 +1,38 @@
 package marioTest;
 
 import java.awt.Canvas;
-
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-
 
 import input.KeyInput;
+import mario.entity.Entity;
 import mario.entity.Player;
-import mariogfx.Sprite;
+import mario.tile.Wall;
 import mariogfx.SpriteSheet;
-
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
-
+import mariogfx.Sprite;
 
 public class Game extends Canvas implements Runnable{
 	public static final int WIDTH=270;	
 	public static final int HEIGHT=WIDTH/14*10;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
-	public static SpriteSheet sheet;
-	public static Camera cam;
-
-	public static Handler handler;
 	private Thread thread;
 	private boolean running= false;
+	private BufferedImage image ;
+	public static Handler handler;
+	public static SpriteSheet sheet;
+	public static Camera cam;
 	public static Sprite grass;
-	public static Sprite player;
-	
+	public static Sprite [] player ;
+	public static Sprite mushroom;
+	public static Sprite [] goomba;
 
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
@@ -45,13 +43,27 @@ public class Game extends Canvas implements Runnable{
 	
 	private void init() {
 		 handler = new Handler();
+		 cam = new Camera();
 		 sheet = new SpriteSheet("/SpriteSheet.png");
 		 addKeyListener(new KeyInput());
 		 grass = new Sprite(sheet, 1, 1);
-		 player = new Sprite(sheet, 1, 16);
-
-		 handler.addEntity(new Player(300, 512, 32, 32, true, Id.player, handler));
-
+		 mushroom =new Sprite(sheet,2,1);
+		 player = new Sprite[10];
+		 goomba = new Sprite[10];
+		 for(int i=0; i<player.length;i++) {
+			 player [i] = new Sprite(sheet, i+1, 16);
+		 }
+		 for(int i=0; i<goomba.length;i++) {
+			 goomba [i] = new Sprite(sheet, i+1, 15);
+		 }
+		 try {
+			image = ImageIO.read(getClass().getResource("/level.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 handler.createLevel(image);
+//		 handler.addEntiy(new Player(300, 512, 32, 32, true, Id.player, handler));
+//		 handler.addTile(new Wall(200, 200, 64, 64, true, Id.wall,handler));
 	}
 	private synchronized void start() {
 		if(running) return ;//if running is true you get out of this method
@@ -71,10 +83,10 @@ public class Game extends Canvas implements Runnable{
 
 	public void run() {
 		init();
-		requestFocus();
+		requestFocus();//so we can type request focus the frame will always into focus
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
-		double delta = 0;
+		double delta = 0.0;
 		double ns = 1000000000.0/60.0;
 		int frames=0;
 		int ticks=0;
@@ -100,7 +112,7 @@ public class Game extends Canvas implements Runnable{
 		stop();
 		
 	}
-	public void render( ) {
+	public void render() {
 		BufferStrategy bs= getBufferStrategy();
 		if ( bs==null) {
 			createBufferStrategy(3);
@@ -109,6 +121,7 @@ public class Game extends Canvas implements Runnable{
 		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
+		g.translate(cam.getX(), cam.getY());//make it move
 		handler.render(g);
 		
 		g.dispose();//dispose what we have created
@@ -116,11 +129,22 @@ public class Game extends Canvas implements Runnable{
 	}
 	public void tick() {//update
 		handler.tick();
+		for(Entity e:handler.entity) {//uses this entity for the camera
+			if(e.getId() == Id.player) {
+				cam.tick(e);
+			}
+		}
 	}
-
+	public int getFrameWidth() {
+		return WIDTH*SCALE;
+	}
+	public int getFrameHeight() {
+		return HEIGHT*SCALE;
+	}
 	public static void main(String[] args) {
 		Game game =new Game();
 		JFrame frame =new JFrame (TITLE);
+		
 		frame.add(game);
 		frame.pack();//pack the game
 		frame.setResizable(false);//avoid resize the frame
@@ -129,6 +153,7 @@ public class Game extends Canvas implements Runnable{
 		frame.setVisible(true);
 		game.start();
 	}
+
 
 
 }

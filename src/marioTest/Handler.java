@@ -1,25 +1,22 @@
 package marioTest;
 
 import java.awt.Graphics;
-
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import mario.entity.Entity;
 import mario.entity.Player;
-import Tile.Tile;
-import Tile.Wall;
-import Tile.Tile;
+import mario.entity.power.Mushroom;
+import mario.tile.Tile;
+import mario.tile.Wall;
 
-public class Handler {
+public class Handler {//a LickedList to add entities
 
-	public LinkedList<Entity> entity = new LinkedList<Entity>();
-	public LinkedList<Tile> tile = new LinkedList<Tile>();
-	
-	public Handler() {
-		createLevel();
-	}
-	
-	public void render(Graphics g) {
+	public LinkedList <Entity> entity =new LinkedList <Entity>();
+	public LinkedList <Tile> tile =new LinkedList <Tile>();
+
+	public void render(Graphics g) {//because we have had graphic in the Game
 		for(Entity en: entity) {
 			en.render(g);
 		}
@@ -27,37 +24,47 @@ public class Handler {
 			ti.render(g);
 		}
 	}
+	
+		
 	public void tick() {
 		for(Entity en: entity) {
 			en.tick();
 		}
-		for(Tile ti: tile) {
+		for(Tile ti:tile) {
 			ti.tick();
 		}
 	}
-	
-	public void addEntity(Entity en) {
+	public void addEntiy(Entity en) {
 		entity.add(en);
-	}
-	
-	public void removeEntity(Entity en) {
+	}	
+	public void removeEntity(Entity en) {//when i use public this method can not be used as handler.removeEntity,why ,it is strange
 		entity.remove(en);
 	}
-	
 	public void addTile(Tile ti) {
 		tile.add(ti);
-	}
-	
+	}	
 	public void removeTile(Tile ti) {
 		tile.remove(ti);
 	}
-	
-	public void createLevel() {
-		for(int i=0;i<Game.WIDTH*Game.SCALE/64;i++) {
-			addTile(new Wall(i*64,Game.HEIGHT*Game.SCALE-64,64,64,true,Id.wall,this));
-			if(i!=0 && i!=1 && i!= 15&& i!=16 && i!=17) {
-				addTile(new Wall(i*64,300,64,64,true,Id.wall,this));
-			}
+	public void createLevel(BufferedImage level) {
+		int width = level.getWidth();
+		int height = level.getHeight();
+		for( int y=0;y<height;y++) {
+			for (int x= 0 ; x< width;x++) {
+				int pixel = level.getRGB(x, y);
+				int red = (pixel >>16 )&0xff;
+				int green = (pixel >>8 )&0xff;
+				int blue = (pixel )&0xff;
+				if(red==0&&blue==0&&green==0) addTile(new Wall(x*32, y*32, 64, 64, true, Id.wall, this));
+				if(red==0&&blue==255&&green==0) addEntiy(new Player(x*32, y*32, 64, 64, false, Id.player, this));
+				if(red==255&&green==0&&blue==0) addEntiy(new Mushroom(x*32, y*32, 64, 64, true, Id.mushroom, this));
+}
 		}
+//		for(int i=0; i<Game.WIDTH*Game.SCALE/32+1;i++) {//the width of our tile is 32
+//			addTile(new Wall(i*32, Game.HEIGHT*Game.SCALE-32, 32,32, true, Id.wall,this));
+//			if(i!=0&&i!=1&&i!=32&&i!=17)addTile(new Wall(i*32, 300, 32,32, true, Id.wall,this));
+//		}
 	}
+
+
 }
