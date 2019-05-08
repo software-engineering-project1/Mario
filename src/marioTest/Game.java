@@ -13,25 +13,33 @@ import javax.swing.JFrame;
 
 import input.KeyInput;
 import mario.entity.Entity;
-import mario.entity.Player;
+import mario.entity.mob.Player;
 import mario.tile.Wall;
 import mariogfx.SpriteSheet;
 import mariogfx.Sprite;
 
 public class Game extends Canvas implements Runnable{
+	
 	public static final int WIDTH=270;	
 	public static final int HEIGHT=WIDTH/14*10;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
+	
 	private Thread thread;
 	private boolean running= false;
 	private BufferedImage image ;
+	
 	public static Handler handler;
 	public static SpriteSheet sheet;
 	public static Camera cam;
+	
 	public static Sprite grass;
-	public static Sprite [] player ;
+	public static Sprite powerUp;
+	public static Sprite usedPowerUp;
+	
 	public static Sprite mushroom;
+	
+	public static Sprite [] player;
 	public static Sprite [] goomba;
 
 	public Game() {
@@ -45,14 +53,23 @@ public class Game extends Canvas implements Runnable{
 		 handler = new Handler();
 		 cam = new Camera();
 		 sheet = new SpriteSheet("/SpriteSheet.png");
+		 
 		 addKeyListener(new KeyInput());
+		 
 		 grass = new Sprite(sheet, 1, 1);
+		 powerUp = new Sprite(sheet,3,1);
+		 usedPowerUp = new Sprite(sheet,4,1);
+		 
 		 mushroom =new Sprite(sheet,2,1);
+		 
 		 player = new Sprite[10];
+		 
 		 goomba = new Sprite[10];
+		 
 		 for(int i=0; i<player.length;i++) {
 			 player [i] = new Sprite(sheet, i+1, 16);
 		 }
+		 
 		 for(int i=0; i<goomba.length;i++) {
 			 goomba [i] = new Sprite(sheet, i+1, 15);
 		 }
