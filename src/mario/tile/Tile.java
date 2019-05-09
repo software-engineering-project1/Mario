@@ -10,12 +10,16 @@ import marioTest.Id;
 public abstract class Tile {
 	public int x,y;//every entity has the position
 	public int width , height; 
+	
 	public int velX ,velY;
-	public boolean solid=false;
-	public boolean activated=false;
-
 	public int facing;
+	
+	public boolean solid=false;
+	public boolean activated = false;
+	
+	
 	public Handler handler;
+	
 	public Id id;
 	
 	public Tile (int x,int y ,int width,int height,boolean solid,Id id,Handler handler) {
@@ -27,9 +31,13 @@ public abstract class Tile {
 		this.handler=handler;
 		this.id=id;
 	}
+	
+	public abstract void render(Graphics g) ;
+	
+	public abstract void tick();
 
 	public void die() {
-		handler.removeTile(this);
+		handler.removeTile(this);;
 
 	}
 	public int getX() {
@@ -55,17 +63,10 @@ public abstract class Tile {
 		this.velX = velX;
 	}
 	public void setVelY(int celY) {
-		this.velY = celY;
+		this.velY = velY;
 	}
-	public abstract void render(Graphics g) ;
-		//why we use graphics instead of buffered strategy is we need to create many buffered strategies
-		
 	
-
-	public abstract void tick();/* {
-		x+=velX;
-		y+=velY;
-	}*/
+	
 	public Rectangle getBounds() {
 		return new Rectangle(getX(),getY(),width,height);		
 	}
