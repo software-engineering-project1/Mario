@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import mario.entity.Entity;
+import mario.entity.mob.Goomba;
 import mario.entity.mob.Player;
 import mario.entity.power.Mushroom;
 import mario.tile.PowerUpBlock;
@@ -62,7 +63,8 @@ public class Handler {//a LickedList to add entities
 				if(red==0&&blue==0&&green==0) addTile(new Wall(x*32, y*32, 64, 64, true, Id.wall, this));
 				if(red==0&&blue==255&&green==0) addEntity(new Player(x*32, y*32, 64, 64, Id.player, this));
 				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));
-				if(red==255&&green==119&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));
+				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.mushroom, this));
+				
 				if(red==255 && green==255 && blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64, true, Id.powerUp, this, Game.mushroom));
 			}
 		}

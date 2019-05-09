@@ -29,6 +29,7 @@ public class Game extends Canvas implements Runnable{
 	private boolean running= false;
 	private BufferedImage image ;
 	
+	
 	public static Handler handler;
 	public static SpriteSheet sheet;
 	public static Camera cam;
