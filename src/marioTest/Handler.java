@@ -59,12 +59,12 @@ public class Handler {//a LickedList to add entities
 				int green = (pixel >>8 )&0xff;
 				int blue = (pixel )&0xff;
 				if(red==0&&blue==0&&green==0) addTile(new Wall(x*32, y*32, 64, 64, true, Id.wall, this));
-				if(red==0&&blue==255&&green==0) addEntity(new Player(x*32, y*32, 64, 64,Id.player, this));//0000ff
+				if(red==0&&blue==255&&green==0) addEntity(new Player(x*1024, y*32, 64, 64,Id.player, this));//0000ff
 				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));//ff0000
 				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
 				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.mushroom));//ffff00
 				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*238, y*32, 64, 64*3,true,Id.pipe,this,128-green));//ff7700
-
+				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*245, y*32, 64, 64*3,true,Id.pipe,this,128-green));
 			}
 		}
 //		for(int i=0; i<Game.WIDTH*Game.SCALE/32+1;i++) {//the width of our tile is 32

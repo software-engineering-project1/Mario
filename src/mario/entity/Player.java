@@ -48,7 +48,7 @@ public class Player extends Entity {
 			if (t.isSolid()&&goingDownPipe==false) {
 				if ( getBoundsTop().intersects(t.getBounds())) {
 					setVelY(0);
-					if(jumping) {
+					if(jumping&&!goingDownPipe) {
 						jumping = false;
 						gravity = 0.8;//make it falling without delay
 						falling = true;//This allows the player who hits the brick to come down naturally
@@ -141,23 +141,26 @@ public class Player extends Entity {
 			for(int i = 0;i<Game.handler.tile.size();i++) {
 				Tile t = Game.handler.tile.get(i);
 				if (t.getId()==Id.pipe) {
+					if(getBounds().intersects(t.getBounds())) {
 						switch (t.facing) {
 						case 0:
 							setVelY(5);//if face is 0 the velY will be -5
 							setVelX(0);
-							pixelsTravelled-=velY;
+							pixelsTravelled+=velY;
 							
 							break;
 						case 2:
-							
 							setVelY(-5);
 							setVelX(0);//in case we go right or left when we  
-							pixelsTravelled+=velY;
+							pixelsTravelled+=-velY;
 
 							break;
 						}
-						if (pixelsTravelled>t.height+height) goingDownPipe = false;
-					
+						if (pixelsTravelled>t.height) {
+							goingDownPipe = false;
+							pixelsTravelled = 0;
+						}
+					}
 					}else if(t.getId()==Id.wall) {
 						if(getBoundsBottom().intersects(t.getBounds())) {
 							setVelY(0);
