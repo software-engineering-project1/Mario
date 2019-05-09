@@ -12,19 +12,15 @@ import marioTest.Id;
 public class Mushroom extends Entity{
 
 	private Random random = new Random();
-	
-	
 	public Mushroom(int x, int y, int width, int height, Id id, Handler handler) {
-		super(x, y, width, height,  id, handler);
-		
+		super(x, y, width, height, id, handler);
 		int dir = random.nextInt(2);
-		
 		switch(dir) {
 		case 0:
-			setVelX(-2);
+			setVelX(-1);
 			break;
 		case 1:
-			setVelX(2);
+			setVelX(1);
 			break;
 		}
 	}
@@ -36,27 +32,23 @@ public class Mushroom extends Entity{
 	public  void tick() {
 		x+=velX;
 		y+=velY;
-
-		for(int i=0;i<handler.tile.size();i++) {
+		for(int i = 0;i<handler.tile.size();i++) {
 			Tile t = handler.tile.get(i);
-			if(t.solid) {
-				
-				if(getBoundsBottom().intersects(t.getBounds())) {//error:forget the (t.)getBounds() make the brick can't move up and down
+			if (t.isSolid()) {
+
+				if(getBoundsBottom().intersects(t.getBounds())) {
 					setVelY(0);
 					if(falling) falling=false;
-				}else if(!falling){
-						gravity = 0.8;
-						falling = true;//this make the player can fall from the wall 
-					
+				}else if(!falling&&!jumping){
+					falling = true;
+					gravity = 0.8;
 				}
-				
+					
 				if(getBoundsLeft().intersects(t.getBounds())){
 					setVelX(1);
-					//x = t.getX()+t.width;
 				}
 				if(getBoundsRight().intersects(t.getBounds())){
 					setVelX(-1);
-					//x = t.getX()-t.width;
 				}
 			}
 		}
@@ -65,5 +57,5 @@ public class Mushroom extends Entity{
 			setVelY((int)gravity);
 		}
 
-	}	
+	}
 }
