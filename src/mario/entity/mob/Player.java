@@ -15,9 +15,10 @@ import marioTest.states.PlayerState;
 public class Player extends Entity {
 	private PlayerState state;
 
-//	private int frame = 0;
-//	private int frameDelay = 0;
+	private int frame = 0;
+	private int frameDelay = 0;
 //	private boolean animate = false;
+	private int pixelsTravelled = 0;
 	
 	public Player(int x,int y,int width,int height,Id id ,Handler handler) {
 		super(x, y, width, height, id, handler);
@@ -44,13 +45,17 @@ public class Player extends Entity {
 //		if (y+height>=900) y=900-height;
 //		if(velX!=0 ) animate= true;
 //		else animate = false;
+//		if(goingDownPipe) {
+//			pixelsTravelled+=velY;
+//		}
 		
-		for(Tile t: handler.tile) {
-			if (!t.solid) break;
+		for(int i=0; i<handler.tile.size(); i++) {
+			Tile t = handler.tile.get(i);
+			if (t.isSolid()&&!goingDownPipe)
 			if(t.getId() == Id.wall) {
 				if ( getBoundsTop().intersects(t.getBounds())) {
 					setVelY(0);
-					if(jumping) {
+					if(jumping&&!goingDownPipe) {
 						jumping = false;
 						gravity = 0.8;//make it falling without delay
 						falling = true;//This allows the player who hits the brick to come down naturally
@@ -138,6 +143,32 @@ public class Player extends Entity {
 					
 				}
 				frameDelay=0;
+			}
+		}
+		
+		if(goingDownPipe) {
+			for(int i=0;i<Game.handler.tile.size(); i++) {
+				Tile t = Game.handler.tile.get(i);
+				if(t.getId()==Id.pipe) {
+					if(getBounds().intersects(t.getBounds())) {
+						switch (t.facing) {
+						case 0:
+							setVelY(-5);
+							setVelX(0);
+							pixelsTravelled+=-velY;
+							break;
+						case 2:
+							setVelY(5);
+							setVelX(0);
+							pixelsTravelled+=velY;
+							break;
+						}
+						if(pixelsTravelled>t.height) {
+							goingDownPipe=false;
+							pixelsTravelled = 0;
+						}
+					}
+				}
 			}
 		}
 
