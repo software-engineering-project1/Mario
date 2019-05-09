@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-/Tile/
-/input/
-/mario/
-/marioTest/
-=======
+/entity/
 /input/
 /mario/
 /marioTest/
 /mariogfx/
->>>>>>> refs/remotes/origin/master
+/mob/
+/power/
+/tile/
