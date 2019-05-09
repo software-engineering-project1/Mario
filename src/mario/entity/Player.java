@@ -34,9 +34,9 @@ public class Player extends Entity {
 	public void tick() {
 		x+=velX;
 		y+=velY;
-		if (goingDownPipe) {
-			pixelsTravelled+=velX;
-		}
+//		if (goingDownPipe) {
+//			pixelsTravelled+=velX;
+//		}
 	//if (x<=0) x = 0;
 ////		if (y<= 0)y = 0;
 //		if (x+width>=2160) x =2160-width;
@@ -66,6 +66,7 @@ public class Player extends Entity {
 				}else if(!falling&&!jumping) {
 						gravity = 0.8;
 						falling = true;//this make the player can fall from the wall 
+//						System.out.println("here");
 					}
 			
 				if(getBoundsLeft().intersects(t.getBounds())){
@@ -142,20 +143,31 @@ public class Player extends Entity {
 				if (t.getId()==Id.pipe) {
 						switch (t.facing) {
 						case 0:
-							setVelY(-5);//if face is 0 the velY will be -5
+							setVelY(5);//if face is 0 the velY will be -5
 							setVelX(0);
+							pixelsTravelled-=velY;
+							
 							break;
 						case 2:
 							
-							setVelY(5);
+							setVelY(-5);
 							setVelX(0);//in case we go right or left when we  
+							pixelsTravelled+=velY;
+
 							break;
 						}
 						if (pixelsTravelled>t.height+height) goingDownPipe = false;
 					
+					}else if(t.getId()==Id.wall) {
+						if(getBoundsBottom().intersects(t.getBounds())) {
+							setVelY(0);
+							if(falling) falling=false;
+							goingDownPipe=false;
+						}
 					}
-					
+			
 				}
+			
 			}
 		
 

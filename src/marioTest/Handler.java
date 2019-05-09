@@ -63,7 +63,7 @@ public class Handler {//a LickedList to add entities
 				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));//ff0000
 				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
 				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.mushroom));//ffff00
-				if(red==0&&(green==123&&green<129)&&blue==0) addTile(new Pipe(x*32, y*32, 64, 64,true,Id.pipe,this,128-green));//ff7700
+				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*238, y*32, 64, 64*3,true,Id.pipe,this,128-green));//ff7700
 
 			}
 		}
