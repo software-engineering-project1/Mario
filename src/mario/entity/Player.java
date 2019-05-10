@@ -146,14 +146,16 @@ public class Player extends Entity {
 						case 0:
 							setVelY(5);//if face is 0 the velY will be -5
 							setVelX(0);
-							pixelsTravelled+=velY;
-							
+							pixelsTravelled-=velY;
 							break;
 						case 2:
 							setVelY(-5);
-							setVelX(0);//in case we go right or left when we  
-							pixelsTravelled+=-velY;
-
+							setVelX(0);
+//							setY(273);
+//							setX(273);
+//							System.out.println(x);
+//							System.out.println(y);
+							pixelsTravelled+=velY;
 							break;
 						}
 						if (pixelsTravelled>t.height) {
@@ -167,6 +169,18 @@ public class Player extends Entity {
 							if(falling) falling=false;
 							goingDownPipe=false;
 						}
+//						if(getBoundsLeft().intersects(t.getBounds())){
+//							setVelX(0);
+//							x = t.getX()+ t.width;
+//							if(falling) falling=false;
+//							goingDownPipe=false;
+//						}
+//						if(getBoundsRight().intersects(t.getBounds())){
+//							setVelX(0);
+//							x = t.getX()- t.width;
+//							if(falling) falling=false;
+//							goingDownPipe=false;
+//						}
 					}
 			
 				}

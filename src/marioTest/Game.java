@@ -32,6 +32,7 @@ public class Game extends Canvas implements Runnable{
 	public static Sprite grass;
 	public static Sprite mushroom;
 	public static Sprite powerUp;
+	public static Sprite coin;
 
 	public static Sprite usedPowerUp;
 
