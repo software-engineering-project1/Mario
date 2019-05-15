@@ -2,6 +2,7 @@ package mario.entity;
 
 import java.awt.Color;
 
+
 import java.awt.Graphics;
 
 import java.awt.Graphics;
@@ -53,7 +54,7 @@ public class Player extends Entity {
 		for(int i=0;i<handler.tile.size();i++) {
 			Tile t = handler.tile.get(i);
 			if(!t.solid && !goingDownPipe) break;					
-				if ( getBoundsTop().intersects(t.getBounds())&&t.getId()!=Id.coin) {
+				if ( getBoundsTop().intersects(t.getBounds())) {
 					setVelY(0);
 					if(jumping && !goingDownPipe) {
 						jumping = false;
@@ -62,12 +63,12 @@ public class Player extends Entity {
 						
 					}
 					if (t.getId()== Id.powerUp) {
-						if (getBoundsTop().intersects(t.getBounds()) && t.getId()!=Id.coin) {
+						if (getBoundsTop().intersects(t.getBounds())) {
 							t.activated=true;
 						}
 					}
 				}
-				if(getBoundsBottom().intersects(t.getBounds())&& t.getId()!=Id.coin) {//error:forget the (t.)getBounds() make the brick can't move up and down
+				if(getBoundsBottom().intersects(t.getBounds())) {//error:forget the (t.)getBounds() make the brick can't move up and down
 					setVelY(0);
 					if(falling) falling=false;
 				}else if(!falling&&!jumping) {
@@ -75,20 +76,20 @@ public class Player extends Entity {
 						falling = true;//this make the player can fall from the wall 
 					}
 			
-				if(getBoundsLeft().intersects(t.getBounds())&& t.getId()!=Id.coin){
+				if(getBoundsLeft().intersects(t.getBounds())){
 					setVelX(0);
 					x = t.getX()+ t.width;//won't paste on the wall
 				}
-				if(getBoundsRight().intersects(t.getBounds())&& t.getId()!=Id.coin){
+				if(getBoundsRight().intersects(t.getBounds())){
 					setVelX(0);
 					x = t.getX()- t.width;
 				}
-				if (getBounds().intersects(t.getBounds())&&t.getId()==Id.coin) {
-					Game.coins++;
-					t.die();
-					
-				}
+//				if (getBounds().intersects(t.getBounds())&&t.getId()==Id.coin) {
+//					Game.coins++;
+//					t.die();
 //					
+				
+					
 //					t.die();
 //				}
 			}
@@ -101,13 +102,13 @@ public class Player extends Entity {
 					if(getBounds().intersects(e.getBounds())) {
 						int tpX = getX();
 						int tpY = getY();
-						width*=1.5;
-						height*=1.5;
+						width += (width/3);
+						height += (height/3);
 						setX(tpX-width);
 						setY(tpY-height);
 						
 						if(state == PlayerState.SMALL) state = PlayerState.BIG;
-						e.die();
+						e.die();//let mario grow up but the mushroom won't die
 						
 					}
 				}else if (e.getId()== Id.goomba) {
@@ -117,8 +118,8 @@ public class Player extends Entity {
 					}else if (getBounds().intersects(e.getBounds())) {
 						if(state == PlayerState.BIG) {
 							state = PlayerState.SMALL;
-							width /= 2;
-							height /= 2;
+							width /= 3;
+							height /= 3;
 							x += width;
 							y += height;
 						}
@@ -127,19 +128,25 @@ public class Player extends Entity {
 							die();
 						}	
 					}
+				}else if(e.id == Id.coin){
+					if (getBounds().intersects(e.getBounds())&&e.getId()==Id.coin) {
+						Game.coins++;
+						e.die();
+//						
+					}
 				}
 			}
 
 		if(jumping && !goingDownPipe) {
-			gravity-=0.1;
+			gravity-=0.17;
 			setVelY((int) -gravity);// if gravity is 5.0 then the VelY is -5.0
-			if(gravity<= 0.0) {
+			if(gravity<= 0.5) {
 				jumping = false;
 				falling = true;
 			}
 		}
 		if ( falling && !goingDownPipe) {
-			gravity+=0.1;
+			gravity+=0.17;
 			setVelY((int)gravity);
 		}
 //		if(animate) {

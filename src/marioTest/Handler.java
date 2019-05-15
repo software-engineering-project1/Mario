@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.swing.border.TitledBorder;
 
+import mario.entity.Coin;
 import mario.entity.Entity;
 import mario.entity.Player;
 import mario.entity.mob.Goomba;
@@ -16,7 +17,6 @@ import mario.tile.Pipe;
 import mario.tile.PowerUpBlock;
 import mario.tile.Tile;
 import mario.tile.Wall;
-import mario.tile.Coin;
 
 public class Handler {//a LickedList to add entities
 

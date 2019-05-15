@@ -1,7 +1,8 @@
-package mario.tile;
+package mario.entity;
 
 import java.awt.Graphics;
 
+import mario.tile.Tile;
 import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;

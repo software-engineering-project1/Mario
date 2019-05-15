@@ -1,6 +1,7 @@
 package marioTest;
 
 import java.awt.Canvas;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -13,41 +14,42 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import input.KeyInput;
+
 import mario.entity.Entity;
-import mario.entity.Player;
 import mario.tile.Wall;
 import mariogfx.SpriteSheet;
 import mariogfx.Sprite;
-//graphical using interface--gui can interact with
+
 public class Game extends Canvas implements Runnable{
-	public static final int WIDTH=320;	
-	public static final int HEIGHT=180;
+	
+	public static final int WIDTH=270;	
+	public static final int HEIGHT=WIDTH/14*10;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
+	
 	private Thread thread;
 	private boolean running= false;
 	private BufferedImage image ;
+	
 	public static int coins = 0;
-	public static int lives = 5;
-	public static int deathScreenTime = 0;//show howuch lives do I have ,we want our screen to show lives for a moment
-//the function is implmented in every tick
+	public static int lives = 3;
+	public static int deathScreenTime = 0;
+	
 	public static boolean showDeathScreen = true;
-//first Mario game
-
-	//public static boolean gameOver = false;
-
+	public static boolean gameOver = false;
 	
 	public static Handler handler;
 	public static SpriteSheet sheet;
 	public static Camera cam;
+	
 	public static Sprite grass;
-	public static Sprite mushroom;
 	public static Sprite powerUp;
-	public static Sprite coin;
-
 	public static Sprite usedPowerUp;
-
-	public static Sprite [] player ;
+	
+	public static Sprite mushroom;
+	public static Sprite coin;
+	
+	public static Sprite [] player;
 	public static Sprite [] goomba;
 
 	public Game() {
@@ -59,23 +61,25 @@ public class Game extends Canvas implements Runnable{
 	
 	private void init() {
 		 handler = new Handler();
-		 sheet = new SpriteSheet("/SpriteSheet.png");
 		 cam = new Camera();
+		 sheet = new SpriteSheet("/SpriteSheet.png");
 		 
 		 addKeyListener(new KeyInput());
+		 
 		 grass = new Sprite(sheet, 1, 1);
-		 powerUp =new Sprite(sheet,3,1);
-		 usedPowerUp =new Sprite(sheet,4,1);
-
+		 powerUp = new Sprite(sheet,3,1);
+		 usedPowerUp = new Sprite(sheet,4,1);
+		 
 		 mushroom =new Sprite(sheet,2,1);
-		 coin =new Sprite(sheet,5,1);
-
+		 coin = new Sprite(sheet, 5,1);
 		 
 		 player = new Sprite[10];
 		 goomba = new Sprite[10];
+		 
 		 for(int i=0; i<player.length;i++) {
 			 player [i] = new Sprite(sheet, i+1, 16);
 		 }
+		 
 		 for(int i=0; i<goomba.length;i++) {
 			 goomba [i] = new Sprite(sheet, i+1, 15);
 		 }
@@ -84,7 +88,6 @@ public class Game extends Canvas implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		 handler.createLevel(image);
 //		 handler.createLevel(image);
 //		 handler.addEntiy(new Player(300, 512, 32, 32, true, Id.player, handler));
 //		 handler.addTile(new Wall(200, 200, 64, 64, true, Id.wall,handler));
@@ -110,9 +113,8 @@ public class Game extends Canvas implements Runnable{
 		requestFocus();//so we can type request focus the frame will always into focus
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
-		double ns = 1000000000.0/60.0;
 		double delta = 0.0;
-
+		double ns = 1000000000.0/60.0;
 		int frames=0;
 		int ticks=0;
 		
@@ -146,62 +148,62 @@ public class Game extends Canvas implements Runnable{
 		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
+		
 		if(!showDeathScreen) {
-			g.drawImage(Game.coin.getBufferedImage(), 20, 20, 75, 75, null);
+			g.drawImage(coin.getBufferedImage(), 20, 20, 75, 75, null);
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("Courier",Font.BOLD,20));
-			g.drawString("x"+coins,100, 95);
-		}
-		if (showDeathScreen) {
-			/*if (!gameOver) {*/
-				g.setColor(Color.WHITE);
-				g.setFont(new Font("Courier",Font.BOLD,50));
-				g.drawImage(Game.player[0].getBufferedImage(), 500, 300, 100, 100, null);
-				g.drawString("x"+lives,610, 400);
-			/*}else {
-				g.setColor(Color.WHITE);
+			g.setFont(new Font("Courier", Font.BOLD, 20));
+			g.drawString("x"+coins, 100, 95);
 
-				g.setFont(new Font("Courier",Font.BOLD,50));
-				g.drawString("Game over :(", 610, 400);
+		}
+		if(showDeathScreen) {
+			if(!gameOver) {
+				g.setColor(Color.WHITE);
+				g.setFont(new Font("Courier", Font.BOLD, 50));
+				g.drawImage(player[0].getBufferedImage(), 500, 300, 100, 100, null);
+				g.drawString("x"+lives, 610, 400);
 			}
-			*/
+			else {
+				g.setColor(Color.WHITE);
+				g.setFont(new Font("Courier", Font.BOLD, 50));
+				g.drawString("Game over. :(", 610, 400);
+			}
 		}
-
+//		g.setColor(Color.WHITE);
+//		g.setFont(new Font("Courier", Font.BOLD, 20));
+//		g.drawString("x"+coins, 100, 95);
 		g.translate(cam.getX(), cam.getY());//make it move
-		if(! showDeathScreen) handler.render(g);		
+		if(!showDeathScreen) handler.render(g);
+		
 		g.dispose();//dispose what we have created
 		bs.show();
-	
-}
+	}
 	public void tick() {//update
 		handler.tick();
-		
-		for(int i= 0 ; i<handler.entity.size();i++) {//uses this entity for the camera
-			Entity e=handler.entity.get(i);
+		for(Entity e:handler.entity) {//uses this entity for the camera
 			if(e.getId() == Id.player) {
-				if(!e.goingDownPipe)cam.tick(e);
+				if(!e.goingDownPipe) cam.tick(e);
 			}
 		}
-		if (showDeathScreen/*&& !gameOver*/) deathScreenTime++;
-			
-	 //soit act on deathScream foever
-		if (deathScreenTime>=180) {
+		
+		if(showDeathScreen&& !gameOver) deathScreenTime++;//it couldn't enter in without this commond
+		if(deathScreenTime>=180) {
 			showDeathScreen = false;
-			
-			deathScreenTime = 0;//reset the level every time we are respawn 
+			deathScreenTime = 0;
 			handler.clearLevel();
 			handler.createLevel(image);
 		}
 	}
-	public static int getFrameWidth() {
+	public int getFrameWidth() {
 		return WIDTH*SCALE;
 	}
-	public static int getFrameHeight() {
+	public int getFrameHeight() {
 		return HEIGHT*SCALE;
 	}
 	public static void main(String[] args) {
 		Game game =new Game();
-		JFrame frame =new JFrame (TITLE);		
+		JFrame frame =new JFrame (TITLE);
+		
 		frame.add(game);
 		frame.pack();//pack the game
 		frame.setResizable(false);//avoid resize the frame
