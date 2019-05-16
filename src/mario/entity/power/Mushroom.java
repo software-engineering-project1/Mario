@@ -12,8 +12,9 @@ import marioTest.Id;
 public class Mushroom extends Entity{
 
 	private Random random = new Random();
-	public Mushroom(int x, int y, int width, int height, Id id, Handler handler) {
+	public Mushroom(int x, int y, int width, int height, Id id, Handler handler,int type) {
 		super(x, y, width, height, id, handler);
+		this.type = type;
 		int dir = random.nextInt(2);
 		switch(dir) {
 		case 0:
@@ -27,7 +28,16 @@ public class Mushroom extends Entity{
 
 	@Override
 	public  void render(Graphics g) {
-		g.drawImage(Game.mushroom.getBufferedImage(), x, y, width, height, null);
+		switch(getType()) {
+		case 0:
+			g.drawImage(Game.mushroom.getBufferedImage(), x, y, width, height, null);
+
+			break;
+		case 1:
+			g.drawImage(Game.lifemushroom.getBufferedImage(), x, y, width, height, null);
+
+			break;
+		}
 	}
 	public  void tick() {
 		x+=velX;

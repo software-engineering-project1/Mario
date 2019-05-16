@@ -7,22 +7,22 @@ import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;
 
-public class Coin extends Entity{
+public class coin extends Entity{
 
-	public Coin(int x, int y, int width, int height, boolean solid, Id id, Handler handler) {
-		super(x, y, width, height,  id, handler);
-		
+
+
+	
+	public coin(int x, int y, int width, int height, Id id, Handler handler) {
+		super(x, y, width, height, id, handler);
 	}
 
-	@Override
+
 	public void render(Graphics g) {
-		g.drawImage(Game.coin.getBufferedImage(),x,y,width,height,null);
-		
+		g.drawImage(Game.coin.getBufferedImage(), x, y, null );
 	}
 
-	@Override
+	
 	public void tick() {
-		
 		
 	}
 
