@@ -1,5 +1,4 @@
 package mario.tile;
-import  marioTest.Id;
 
 import java.awt.Color;
 import java.awt.Graphics;

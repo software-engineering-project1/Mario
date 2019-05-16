@@ -23,17 +23,19 @@ public class KeyInput implements KeyListener{
 						Tile t = Game.handler.tile.get(q);
 						if(t.getId()==Id.pipe) {
 							if (en.getBoundsTop().intersects(t.getBounds())) {
-								if (!en.goingDownPipe) {
-									en.goingDownPipe = true;
-									
+								if (!en.goingDownPipe) en.goingDownPipe = true;		
+							}
+						}
+						if(t.isSolid()) {
+							if(en.getBoundsBottom().intersects(t.getBounds())) {
+								if (!en.jumping) {
+									en.jumping = true;
+									en.gravity = 8.0;
 								}
 							}
 						}
 					}
-					if(!en.jumping) {
-						en.jumping = true;
-						en.gravity=10.0;
-					}
+				
 					break;
 				case KeyEvent.VK_S:
 					for(int q=0;q<Game.handler.tile.size();q++) {
@@ -46,6 +48,8 @@ public class KeyInput implements KeyListener{
 							}
 						}
 					}
+					
+				
 					break;
 				
 				case KeyEvent.VK_A:
@@ -56,8 +60,9 @@ public class KeyInput implements KeyListener{
 					en.setVelX(5);
 					en.facing = 1;
 					break;
-				case KeyEvent.VK_Q:
-					en.die();
+//				case KeyEvent.VK_Q:
+//					en.die();
+//					break;
 				}
 			}
 

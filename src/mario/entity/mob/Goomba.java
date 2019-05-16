@@ -14,19 +14,17 @@ public class Goomba extends Entity{
 	private Random random = new Random();
 
 	private int frame = 0;
-	private int frameDelay = 0;
-
 	public Goomba(int x, int y, int width, int height, Id id, Handler handler) {
 		super(x, y, width, height, id, handler);
 		int dir = random.nextInt(2);
 		
 		switch(dir) {
 		case 0:
-			setVelX(-1);
+			setVelX(-2);
 			facing = 0;
 			break;
 		case 1:
-			setVelX(1);
+			setVelX(2);
 			facing = 1;
 
 			break;
@@ -69,19 +67,6 @@ public class Goomba extends Entity{
 				gravity+=0.1;
 				setVelY((int)gravity);
 			}
-			if(velX!=0) {
-				frameDelay++;
-				if(frameDelay>=10) {
-					frame++;
-					if(frame>=3) {
-						frame=0;
-						
-					}
-					frameDelay=0;
-				}
-			}
 
 		}
 	}
-
-

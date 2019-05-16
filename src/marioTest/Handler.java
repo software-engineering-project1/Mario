@@ -5,12 +5,11 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import javax.swing.border.TitledBorder;
-
+import mario.entity.Coin;
 import mario.entity.Entity;
 import mario.entity.Player;
-import mario.entity.coin;
 import mario.entity.mob.Goomba;
+import mario.entity.mob.Koopa;
 import mario.entity.mob.TowerBoss;
 import mario.entity.power.Mushroom;
 import mario.tile.Pipe;
@@ -25,10 +24,10 @@ public class Handler {//a LickedList to add entities
 
 	public void render(Graphics g) {//because we have had graphic in the Game
 		for(Entity en: entity) {
-			en.render(g);
+			if(Game.getVisibleArea()!=null&&en.getBounds().intersects(Game.getVisibleArea())) en.render(g);
 		}
 		for(Tile ti: tile) {
-			ti.render(g);
+			if(Game.getVisibleArea()!=null&&ti.getBounds().intersects(Game.getVisibleArea())) ti.render(g);
 		}
 	}
 	
@@ -38,7 +37,7 @@ public class Handler {//a LickedList to add entities
 			en.tick();
 		}
 		for(Tile ti:tile) {
-			ti.tick();
+			if(Game.getVisibleArea()!=null&&ti.getBounds().intersects(Game.getVisibleArea())) ti.tick();
 		}
 	}
 	public void addEntity(Entity en) {
@@ -65,12 +64,12 @@ public class Handler {//a LickedList to add entities
 				if(red==0&&blue==0&&green==0) addTile(new Wall(x*32, y*32, 64, 64, true, Id.wall, this));
 				if(red==0&&blue==255&&green==0) addEntity(new Player(x*32, y*32, 48, 48,Id.player, this));//0000ff
 //				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));//ff0000
-				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
-				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifemushroom,1));//ffff00
+//				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
+				if(red==255&&green==119&&blue==0) addEntity(new Koopa(x*32, y*32, 64, 64, Id.koopa,this));
+				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00
 				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*32, y*32, 64, 64*5,true,Id.pipe,this,128-green));//ff7700
-				if(red==255&&green==250&&blue==0) addEntity(new coin(x*32, y*32, 32, 32,Id.coin,this));//fffa00
-				if(red==255&&green==0&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64,Id.towerBoss,this,3));//fffa00
-
+				if(red==255&&green==250&&blue==0) addEntity(new Coin(x*32, y*32, 64, 64, Id.coin, this));
+				if(red==255&&green==0&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));
 			}
 		}
 //		for(int i=0; i<Game.WIDTH*Game.SCALE/32+1;i++) {//the width of our tile is 32
@@ -78,11 +77,7 @@ public class Handler {//a LickedList to add entities
 //			if(i!=0&&i!=1&&i!=32&&i!=17)addTile(new Wall(i*32, 300, 32,32, true, Id.wall,this));
 //		}
 	}
-
-
 	public void clearLevel() {
-
-
 		entity.clear();
 		tile.clear();
 	}
