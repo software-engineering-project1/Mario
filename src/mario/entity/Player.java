@@ -89,6 +89,10 @@ public class Player extends Entity {
 					setVelX(0);
 					x = t.getX()- t.width;
 				}
+				//actually, put your if statement above everything
+				if(getBounds().intersects(t.getBounds())) {
+					if(t.getId()==Id.flag) Game.switchLevel();
+				}
 		
 			}
 				

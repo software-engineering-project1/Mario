@@ -27,9 +27,15 @@ public class Game extends Canvas implements Runnable{
 	public static final int HEIGHT=180;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
+	
 	private Thread thread;
 	private boolean running= false;
-	private BufferedImage image ;
+	private BufferedImage level1 ;
+	private BufferedImage level2 ;
+	private static BufferedImage[] levels;
+	
+	private static int playerX,playerY;
+	private static int level = 0;
 	
 	public static int coins = 0;
 	public static int lives = 5;
@@ -40,8 +46,6 @@ public class Game extends Canvas implements Runnable{
 	public static boolean playing = false;
 	
 	public static Handler handler;
-	
-	public static int playerX,playerY;
 	
 	public static SpriteSheet sheet;
 	
@@ -61,6 +65,7 @@ public class Game extends Canvas implements Runnable{
 
 	public static Sprite [] player ;
 	public static Sprite [] goomba;
+	public static Sprite [] flag;
 
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
@@ -89,14 +94,23 @@ public class Game extends Canvas implements Runnable{
 
 		 player = new Sprite[10];
 		 goomba = new Sprite[10];
+		 flag = new Sprite[3];
+		 levels = new BufferedImage[2];
+		 
 		 for(int i=0; i<player.length;i++) {
 			 player [i] = new Sprite(sheet, i+1, 16);
 		 }
 		 for(int i=0; i<goomba.length;i++) {
 			 goomba [i] = new Sprite(sheet, i+1, 15);
 		 }
+		 for (int i = 0; i < flag.length; i++) {
+			flag[i] = new Sprite(sheet, 2, i+1);
+		}
+		 
 		 try {
-			image = ImageIO.read(getClass().getResource("/level.png"));
+			levels[0] = ImageIO.read(getClass().getResource("/level.png"));
+//			levels[0] = ImageIO.read(getClass().getResource("/level2.png"));
+			//don't have level2 picture right now
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -200,7 +214,7 @@ public class Game extends Canvas implements Runnable{
 			showDeathScreen = false;
 			deathScreenTime=0;
 			handler.clearLevel();
-			handler.createLevel(image);
+			handler.createLevel(levels[level]);
 			}else if(gameOver) {
 				showDeathScreen = false;
 				deathScreenTime=0;
@@ -216,6 +230,13 @@ public class Game extends Canvas implements Runnable{
 	
 	public static int getFrameHeight() {
 		return HEIGHT*SCALE;
+	}
+	
+	public static void switchLevel() {
+		Game.level++;
+		
+		handler.clearLevel();
+		handler.createLevel(levels[level]);
 	}
 	
 	public static Rectangle getVisibleArea() {

@@ -12,6 +12,7 @@ import mario.entity.mob.Goomba;
 import mario.entity.mob.Koopa;
 import mario.entity.mob.TowerBoss;
 import mario.entity.power.Mushroom;
+import mario.tile.Flag;
 import mario.tile.Pipe;
 import mario.tile.PowerUpBlock;
 import mario.tile.Tile;
@@ -66,10 +67,11 @@ public class Handler {//a LickedList to add entities
 //				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));//ff0000
 //				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
 				if(red==255&&green==119&&blue==0) addEntity(new Koopa(x*32, y*32, 64, 64, Id.koopa,this));
-				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00
+//				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00
 				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*32, y*32, 64, 64*5,true,Id.pipe,this,128-green));//ff7700
 				if(red==255&&green==250&&blue==0) addEntity(new Coin(x*32, y*32, 64, 64, Id.coin, this));
-				if(red==255&&green==0&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));
+//				if(red==255&&green==0&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));
+				if(red==0&&green==255&&blue==0) addTile(new Flag(x*32, y*32, 64, 64*5, true, Id.flag, this));
 			}
 		}
 //		for(int i=0; i<Game.WIDTH*Game.SCALE/32+1;i++) {//the width of our tile is 32
