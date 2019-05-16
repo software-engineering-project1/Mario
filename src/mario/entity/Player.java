@@ -124,7 +124,7 @@ public class Player extends Entity {
 						break;
 					}
 					
-				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss) {
+				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
 					if (getBoundsLeft().intersects(e.getBoundsTop())) {
 						if(e.getId()!=Id.towerBoss)e.die();
 						else if(e.attackable) {
