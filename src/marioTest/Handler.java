@@ -1,6 +1,7 @@
 package marioTest;
 
 import java.awt.Graphics;
+
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -18,7 +19,7 @@ import mario.tile.PowerUpBlock;
 import mario.tile.Tile;
 import mario.tile.Wall;
 
-public class Handler {//a LickedList to add entities
+public class Handler {//a LinkedList to add entities
 
 	public LinkedList <Entity> entity =new LinkedList <Entity>();
 	public LinkedList <Tile> tile =new LinkedList <Tile>();
@@ -64,7 +65,7 @@ public class Handler {//a LickedList to add entities
 				int blue = (pixel )&0xff;
 				if(red==0&&blue==0&&green==0) addTile(new Wall(x*32, y*32, 64, 64, true, Id.wall, this));
 				if(red==0&&blue==255&&green==0) addEntity(new Player(x*32, y*32, 48, 48,Id.player, this));//0000ff
-//				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));//ff0000
+//				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this, 1));//ff0000
 //				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
 				if(red==255&&green==119&&blue==0) addEntity(new Koopa(x*32, y*32, 64, 64, Id.koopa,this));
 //				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00

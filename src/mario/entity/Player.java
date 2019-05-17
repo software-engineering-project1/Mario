@@ -57,7 +57,11 @@ public class Player extends Entity {
 	//	else animate = false;
 		for(int i=0;i<handler.tile.size();i++) {
 			Tile t = handler.tile.get(i);
-			if (t.isSolid()&&goingDownPipe==false) {
+			if (t.isSolid()&&!goingDownPipe) {
+				if(getBounds().intersects(t.getBounds())) {
+					if(t.getId()==Id.flag) Game.switchLevel();
+				}
+				
 				if ( getBoundsTop().intersects(t.getBounds())) {
 					setVelY(0);
 					if(jumping&&!goingDownPipe) {
@@ -67,20 +71,19 @@ public class Player extends Entity {
 						
 					}
 					if (t.getId()== Id.powerUp) {
-						if (getBoundsTop().intersects(t.getBounds())) {
+						if (getBoundsTop().intersects(t.getBounds())) 
 							t.activated=true;
-						}
 					}
 				}
 				if(getBoundsBottom().intersects(t.getBounds())) {//error:forget the (t.)getBounds() make the brick can't move up and down
 					setVelY(0);
 					if(falling) falling=false;
 				}else if(!falling&&!jumping) {
-						gravity = 0.8;
-						falling = true;//this make the player can fall from the wall 
-//						System.out.println("here");
-					}
-			
+					falling = true;//this make the player can fall from the wall 	
+					gravity = 0.8;
+//					System.out.println("here");
+				}
+				
 				if(getBoundsLeft().intersects(t.getBounds())){
 					setVelX(0);
 					x = t.getX()+ t.width;
@@ -88,10 +91,6 @@ public class Player extends Entity {
 				if(getBoundsRight().intersects(t.getBounds())){
 					setVelX(0);
 					x = t.getX()- t.width;
-				}
-				//actually, put your if statement above everything
-				if(getBounds().intersects(t.getBounds())) {
-					if(t.getId()==Id.flag) Game.switchLevel();
 				}
 		
 			}
@@ -121,12 +120,12 @@ public class Player extends Entity {
 							Game.lives++;
 							e.die();
 						}
-						break;
+//						break;
 					}
 					
 				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
-					if (getBoundsLeft().intersects(e.getBoundsTop())) {
-						if(e.getId()!=Id.towerBoss)e.die();
+					if (getBoundsBottom().intersects(e.getBoundsTop())) {
+						if(e.getId()!=Id.towerBoss) e.die();
 						else if(e.attackable) {
 							e.hp--;
 							e.falling=true;
@@ -152,7 +151,9 @@ public class Player extends Entity {
 						}
 						
 					}
-				}else if(e.getId()==Id.coin) {
+				}//the first 3 if has some issues so that mushroom, goomba, upTower, towerBoss and 
+				//plant cannot collide correctly
+				else if(e.getId()==Id.coin) {
 					if(getBounds().intersects(e.getBounds())&&e.getId()==Id.coin) {
 						Game.coins++;
 						e.die();

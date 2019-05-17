@@ -14,6 +14,7 @@ public class Pipe extends Tile{
 		this.facing = facing;
 		
 		if(plant) handler.addEntity(new Plant(getX(), getY()-64, getWidth(), 64, Id.plant, handler));
+		//Mario could not die if the flower appears
 	}
 
 
