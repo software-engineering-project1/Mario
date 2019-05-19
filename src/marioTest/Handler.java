@@ -13,6 +13,7 @@ import mario.entity.mob.Goomba;
 import mario.entity.mob.Koopa;
 import mario.entity.mob.TowerBoss;
 import mario.entity.power.Mushroom;
+import mario.entity.power.PowerStar;
 import mario.tile.Flag;
 import mario.tile.Pipe;
 import mario.tile.PowerUpBlock;
@@ -26,10 +27,13 @@ public class Handler {//a LinkedList to add entities
 
 	public void render(Graphics g) {//because we have had graphic in the Game
 		for(Entity en: entity) {
-			if(Game.getVisibleArea()!=null&&en.getBounds().intersects(Game.getVisibleArea())) en.render(g);
+			if(Game.getVisibleArea()!=null&&en.getBounds().intersects(Game.getVisibleArea())&& en.getId()!=Id.particle) en.render(g);
 		}
 		for(Tile ti: tile) {
 			if(Game.getVisibleArea()!=null&&ti.getBounds().intersects(Game.getVisibleArea())) ti.render(g);
+		}
+		for(Entity en: entity) {
+			if(Game.getVisibleArea()!=null&&en.getBounds().intersects(Game.getVisibleArea())&& en.getId()==Id.particle) en.render(g);
 		}
 	}
 	
@@ -73,6 +77,7 @@ public class Handler {//a LinkedList to add entities
 				if(red==255&&green==250&&blue==0) addEntity(new Coin(x*32, y*32, 64, 64, Id.coin, this));
 //				if(red==255&&green==0&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));
 				if(red==0&&green==255&&blue==0) addTile(new Flag(x*32, y*32, 64, 64*5, true, Id.flag, this));
+				if(red==255&green==128&&blue==0) addEntity(new PowerStar(x*64,y*64,64,64,Id.star,this));
 			}
 		}
 //		for(int i=0; i<Game.WIDTH*Game.SCALE/32+1;i++) {//the width of our tile is 32

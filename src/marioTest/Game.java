@@ -28,6 +28,7 @@ public class Game extends Canvas implements Runnable{
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
 	
+	
 	private Thread thread;
 	private boolean running= false;
 	private BufferedImage level1 ;
@@ -38,6 +39,7 @@ public class Game extends Canvas implements Runnable{
 	private static int level = 0;
 	
 	public static int coins = 0;
+	
 	public static int lives = 5;
 	public static int deathScreenTime = 0;
 	
@@ -60,12 +62,14 @@ public class Game extends Canvas implements Runnable{
 	public static Sprite lifeMushroom;
 	public static Sprite powerUp;
 	public static Sprite coin;
+	public static Sprite star;
 
 	public static Sprite usedPowerUp;
 
 	public static Sprite [] player ;
 	public static Sprite [] goomba;
 	public static Sprite [] flag;
+	public static Sprite [] particle;
 
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
@@ -91,10 +95,11 @@ public class Game extends Canvas implements Runnable{
 		 coin = new Sprite(sheet, 5, 1);
 		 powerUp = new Sprite(sheet,3,1);
 		 usedPowerUp = new Sprite(sheet,4,1);
-
+		 star = new Sprite(sheet,7,1);
 		 player = new Sprite[10];
 		 goomba = new Sprite[10];
 		 flag = new Sprite[3];
+		 particle = new Sprite[6];
 		 levels = new BufferedImage[2];
 		 
 		 for(int i=0; i<player.length;i++) {
@@ -106,6 +111,9 @@ public class Game extends Canvas implements Runnable{
 		 for (int i = 0; i < flag.length; i++) {
 			flag[i] = new Sprite(sheet, 2, i+1);
 		}
+		 for(int i=0;i<particle.length;i++) {
+			 particle[i] = new Sprite(sheet,i+1,14);
+		 }
 		 
 		 try {
 			levels[0] = ImageIO.read(getClass().getResource("/level.png"));
