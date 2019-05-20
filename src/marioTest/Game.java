@@ -34,7 +34,8 @@ public class Game extends Canvas implements Runnable{
 	private BufferedImage level1 ;
 	private BufferedImage level2 ;
 	private static BufferedImage[] levels;
-	
+	private static BufferedImage backgrand;
+
 	private static int playerX,playerY;
 	private static int level = 0;
 	
@@ -71,11 +72,11 @@ public class Game extends Canvas implements Runnable{
 	public static Sprite [] flag;
 	public static Sprite [] particle;
 
-	public static Sound jump;
-	public static Sound goombastomp;
-	public static Sound levelComplete;
-	public static Sound loseLife;
-	public static Sound themeSong;
+//	public static Sound jump;
+//	public static Sound goombastomp;
+//	public static Sound levelComplete;
+//	public static Sound loseLife;
+//	public static Sound themeSong;// for the sound
 
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
@@ -123,16 +124,17 @@ public class Game extends Canvas implements Runnable{
 		 
 		 try {
 			levels[0] = ImageIO.read(getClass().getResource("/level.png"));
-//			levels[0] = ImageIO.read(getClass().getResource("/level2.png"));
+			levels[0] = ImageIO.read(getClass().getResource("/level2.png"));
+			backgrand= ImageIO.read(getClass().getResource("/backgrand.png"));
 			//don't have level2 picture right now
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		 jump = new Sound("/smb jump.mp3");
-		 goombastomp = new Sound("/smb goombastomp.mp3");
-		 levelComplete = new Sound("/smb levelComplete.mp3");
-		 loseLife = new Sound("/smb loseLife.mp3");
-		 themeSong = new Sound("/smb themeSong.mp3");
+//		 jump = new Sound("/smb jump.mp3");
+//		 goombastomp = new Sound("/smb goombastomp.mp3");
+//		 levelComplete = new Sound("/smb levelComplete.mp3");
+//		 loseLife = new Sound("/smb loseLife.mp3");
+//		 themeSong = new Sound("/smb themeSong.mp3");//for the sound
 
 //		 handler.createLevel(image);
 //		 handler.addEntiy(new Player(300, 512, 32, 32, true, Id.player, handler));
@@ -192,23 +194,21 @@ public class Game extends Canvas implements Runnable{
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
+		
 		if(!showDeathScreen) {
-		g.drawImage(coin.getBufferedImage(), 20, 20, 75, 75,null);
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Courier",Font.BOLD,20));
-		g.drawString("x"+coins, 100, 95);
-		}
-		if(showDeathScreen) {
-			if(!gameOver) {
-			g.drawImage(player[0].getBufferedImage(), 500, 300, 100, 100,null);
+			g.drawImage(backgrand, 0, 0, getWidth(), getHeight(), null);
+
+		
+		}else {
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, getWidth(), getHeight());
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Courier",Font.BOLD,50));
-			g.drawString("x"+lives, 610, 400);
+			if(!gameOver) {
+				g.drawImage(player[0].getBufferedImage(), 500, 300, 100, 100,null);
+			
+				g.drawString("x"+lives, 610, 400);
 			}else {
-				g.setColor(Color.WHITE);
-				g.setFont(new Font("Courier",Font.BOLD,50));
 				g.drawString("Game Over :(", 300, 400);
 			}
 		}
@@ -235,7 +235,7 @@ public class Game extends Canvas implements Runnable{
 			handler.createLevel(levels[level]);
 			showDeathScreen = false;
 
-			themeSong.play();
+//			themeSong.play();//for the sound
 	/*		if(!gameOver) {
 			showDeathScreen = false;
 			deathScreenTime=0;
@@ -263,8 +263,8 @@ public class Game extends Canvas implements Runnable{
 		
 		handler.clearLevel();
 		handler.createLevel(levels[level]);
-		Game.themeSong.close();
-		Game.levelComplete.play();
+//		Game.themeSong.close();
+//		Game.levelComplete.play();  for the sound
 	}
 	
 	public static Rectangle getVisibleArea() {

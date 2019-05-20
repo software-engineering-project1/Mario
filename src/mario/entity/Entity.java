@@ -46,15 +46,11 @@ public abstract class Entity {
 		Game.lives--;
 		Game.showDeathScreen=true;
 		if(Game.lives<=0) Game.gameOver=true;
-//		Game.loseALife.play();
+	//	Game.loseALife.play();//for the sound
 		}
 	}
 	public abstract  void render(Graphics g) ;//why we use graphics instead of buffered strategy is we need to create many buffered strategies
-	public abstract  void tick() ;/*{
-		x+=velX;
-		y+=velY;
-	}*/
-	
+	public abstract  void tick() ;
 
 	public int getX() {
 		return x;
@@ -98,9 +94,7 @@ public abstract class Entity {
 	}
 	public Rectangle getBoundsTop() {
 		return new Rectangle(getX()+5,getY(),width-10,5);
-
-/*		return new Rectangle(getX()+10,getY(),width-20,5);
-*/	}
+	}
 	public Rectangle getBoundsBottom() {
 		return new Rectangle(getX()+10,getY()+height-5,width-20,5);
 	}

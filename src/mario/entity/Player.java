@@ -109,12 +109,11 @@ public class Player extends Entity {
 				}else if(!falling&&!jumping) {
 					falling = true;//this make the player can fall from the wall 	
 					gravity = 0.8;
-//					System.out.println("here");
 				}
 				
 				if(getBoundsLeft().intersects(t.getBounds())){
 					setVelX(0);
-					x = t.getX()+ t.width;
+					x = t.getX()+ width;//delete the t to make the coin scream cover the block
 				}
 				if(getBoundsRight().intersects(t.getBounds())){
 					setVelX(0);
@@ -158,7 +157,7 @@ public class Player extends Entity {
 						if (getBoundsBottom().intersects(e.getBoundsTop())) {
 							if(e.getId()!=Id.towerBoss) {
 								e.die();
-								Game.goombastomp.play();
+				//				Game.goombastomp.play();
 							}
 							else if(e.attackable) {
 								e.hp--;
@@ -367,10 +366,6 @@ public class Player extends Entity {
 						case 2:
 							setVelY(-5);
 							setVelX(0);
-//							setY(273);
-//							setX(273);
-//							System.out.println(x);
-//							System.out.println(y);
 							pixelsTravelled+=velY;
 							break;
 						}
@@ -385,18 +380,7 @@ public class Player extends Entity {
 							if(falling) falling=false;
 							goingDownPipe=false;
 						}
-//						if(getBoundsLeft().intersects(t.getBounds())){
-//							setVelX(0);
-//							x = t.getX()+ t.width;
-//							if(falling) falling=false;
-//							goingDownPipe=false;
-//						}
-//						if(getBoundsRight().intersects(t.getBounds())){
-//							setVelX(0);
-//							x = t.getX()- t.width;
-//							if(falling) falling=false;
-//							goingDownPipe=false;
-//						}
+
 					}
 			
 				}

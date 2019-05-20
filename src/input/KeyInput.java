@@ -27,7 +27,7 @@ public class KeyInput implements KeyListener{
 								if (!en.jumping) {
 									en.jumping = true;
 									en.gravity = 8.0;
-									Game.jump.play();
+//									Game.jump.play();//for the sound
 								}
 							}else if(t.getId()==Id.pipe) {
 								if (en.getBoundsTop().intersects(t.getBounds())) {

@@ -1,3 +1,4 @@
+
 package marioTest;
 
 import javax.sound.sampled.AudioFormat;
@@ -41,3 +42,4 @@ public class Sound {
 		}
 	}
 }
+
