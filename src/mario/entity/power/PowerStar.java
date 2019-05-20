@@ -9,14 +9,14 @@ import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;
 
-public class PowerStar  extends Entity{
-	
-	private Random random;
-	
+public class PowerStar extends Entity {
 
+	private Random random;	
+	
 	public PowerStar(int x, int y, int width, int height, Id id, Handler handler) {
 		super(x, y, width, height, id, handler);
 		random = new Random();
+		
 		int dir = random.nextInt(2);
 		switch(dir) {
 		case 0:
@@ -26,26 +26,26 @@ public class PowerStar  extends Entity{
 			setVelX(4);
 			break;
 		}
-		falling = true;
-		gravity = 0.17;
-	}
+		falling=true;
+		gravity=0.17;
+		}
 
-	
+	@Override
 	public void render(Graphics g) {
-		g.drawImage(Game.star.getBufferedImage(),getX(),getY(),getWidth(),getHeight(),null );
-		
-		
+		g.drawImage(Game.star.getBufferedImage(), getX(), getY(), getWidth(), getHeight(), null);
 	}
 
-	
+	@Override
 	public void tick() {
-		for(int i=0;i<handler.tile.size();i++) {
+		x+=velX;
+		y+=velY;
+		for(int i=0; i<handler.tile.size();i++) {
 			Tile t = handler.tile.get(i);
 			
-			if(t.isSolid()){
+			if(t.isSolid()) {
 				if(getBoundsBottom().intersects(t.getBounds())) {
-					jumping = true;
-					gravity = 0.1;
+					jumping=true;
+					gravity=8.0;
 				}
 				if(getBoundsLeft().intersects(t.getBounds())) setVelX(4);
 				if(getBoundsRight().intersects(t.getBounds())) setVelX(-4);
@@ -59,12 +59,10 @@ public class PowerStar  extends Entity{
 				falling = true;
 			}
 		}
-		if ( falling ) {
+		if (falling) {
 			gravity+=0.17;
 			setVelY((int)gravity);
-		}
-		
+		}	
 	}
-	
 
 }

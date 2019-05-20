@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 
 import mario.state.BossState;
 import mario.state.KoopaState;
+import mario.state.PlayerState;
 import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;
@@ -29,6 +30,7 @@ public abstract class Entity {
 	public Id id ;
 	public BossState bossState;
 	public KoopaState koopaState;
+	public PlayerState state;
 	
 	public double gravity = 0.0;
 	public Handler handler;
@@ -46,11 +48,16 @@ public abstract class Entity {
 		Game.lives--;
 		Game.showDeathScreen=true;
 		if(Game.lives<=0) Game.gameOver=true;
-	//	Game.loseALife.play();//for the sound
+		
+		Game.losealife.play();
 		}
 	}
 	public abstract  void render(Graphics g) ;//why we use graphics instead of buffered strategy is we need to create many buffered strategies
-	public abstract  void tick() ;
+	public abstract  void tick() ;/*{
+		x+=velX;
+		y+=velY;
+	}*/
+	
 
 	public int getX() {
 		return x;
@@ -70,19 +77,13 @@ public abstract class Entity {
 	public int getType() {
 		return type;
 	}
-	
 	public int getWidth() {
 		return width;
-	}
-	public void setWidth(int width) {
-		this.width = width;
 	}
 	public int getHeight() {
 		return height;
 	}
-	public void setHeight(int height) {
-		this.height = height;
-	}
+
 	public void setVelX(int velX) {
 		this.velX = velX;
 	}
@@ -94,7 +95,9 @@ public abstract class Entity {
 	}
 	public Rectangle getBoundsTop() {
 		return new Rectangle(getX()+5,getY(),width-10,5);
-	}
+
+/*		return new Rectangle(getX()+10,getY(),width-20,5);
+*/	}
 	public Rectangle getBoundsBottom() {
 		return new Rectangle(getX()+10,getY()+height-5,width-20,5);
 	}

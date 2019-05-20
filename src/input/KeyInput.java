@@ -4,11 +4,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import mario.entity.Entity;
+import mario.entity.Fireball;
+import mario.state.PlayerState;
 import mario.tile.Tile;
 import marioTest.Game;
 import marioTest.Id;
 
 public class KeyInput implements KeyListener{
+	
+	private boolean fire;
 
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
@@ -21,17 +25,18 @@ public class KeyInput implements KeyListener{
 				case KeyEvent.VK_W:
 					for(int q=0;q<Game.handler.tile.size();q++) {
 						Tile t = Game.handler.tile.get(q);
-						
+						if(t.getId()==Id.pipe) {
+							if (en.getBoundsTop().intersects(t.getBounds())) {
+								if (!en.goingDownPipe) en.goingDownPipe = true;		
+							}
+						}
 						if(t.isSolid()) {
 							if(en.getBoundsBottom().intersects(t.getBounds())) {
 								if (!en.jumping) {
 									en.jumping = true;
-									en.gravity = 8.0;
-//									Game.jump.play();//for the sound
-								}
-							}else if(t.getId()==Id.pipe) {
-								if (en.getBoundsTop().intersects(t.getBounds())) {
-									if (!en.goingDownPipe) en.goingDownPipe = true;		
+									en.gravity = 10.0;
+									
+									Game.jump.play();
 								}
 							}
 						}
@@ -61,6 +66,20 @@ public class KeyInput implements KeyListener{
 					en.setVelX(5);
 					en.facing = 1;
 					break;
+				case KeyEvent.VK_SPACE:
+					if(en.state==PlayerState.FIRE&&!fire) {
+					switch (en.facing) {
+					case 0:
+						Game.handler.addEntity(new Fireball(en.getX()-24, en.getY()+12, 24, 24, Id.fireball, Game.handler, en.facing));
+						fire=true;
+						break;
+
+					case 1:
+						Game.handler.addEntity(new Fireball(en.getX()+en.getWidth(), en.getY()+12, 24, 24, Id.fireball, Game.handler, en.facing));
+						fire=true;
+						break;
+					}
+				}
 //				case KeyEvent.VK_Q:
 //					en.die();
 //					break;
@@ -90,6 +109,9 @@ public class KeyInput implements KeyListener{
 					break;
 				case KeyEvent.VK_D:
 					en.setVelX(0);
+					break;
+				case KeyEvent.VK_SPACE:
+					fire=false;
 					break;
 				}
 			}

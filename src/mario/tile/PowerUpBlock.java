@@ -2,6 +2,7 @@ package mario.tile;
 
 import java.awt.Graphics;
 
+import mario.entity.power.Flower;
 import mario.entity.power.Mushroom;
 import marioTest.Game;
 import marioTest.Handler;
@@ -29,7 +30,8 @@ public class PowerUpBlock extends Tile{
 		if (activated&!poppedUp) {
 			spriteY--;
 			if (spriteY<= y-height) {
-				handler.addEntity(new Mushroom(x, spriteY, width, height, id, handler,type));
+				if(powerUp==Game.mushroom||powerUp==Game.lifeMushroom) handler.addEntity(new Mushroom(x, spriteY, width, height, id, handler,type));
+				else if(powerUp==Game.flower) handler.addEntity(new Flower(x, spriteY, width, height, Id.fireball, handler));
 				poppedUp = true;
 			}
 		}

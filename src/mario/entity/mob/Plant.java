@@ -7,20 +7,20 @@ import mario.entity.Entity;
 import marioTest.Handler;
 import marioTest.Id;
 
-public class Plant extends Entity{
-
-	private int wait;//how long our plant stay above
+public class Plant extends Entity {
+	
+	private int wait;
 	private int pixelsTravelled;
 	
-	private boolean moving; //check whether our plant is moving
+	private boolean moving;
 	private boolean insidePipe;
-	
+
 	public Plant(int x, int y, int width, int height, Id id, Handler handler) {
 		super(x, y, width, height, id, handler);
 		
-		moving = false;
-		insidePipe = true;
-	}
+		moving=false;
+		insidePipe=true;
+		}
 
 	@Override
 	public void render(Graphics g) {
@@ -30,31 +30,31 @@ public class Plant extends Entity{
 
 	@Override
 	public void tick() {
-		y += velY;
+		y+=velY;
 		
 		if(!moving) wait++;
 		
 		if(wait>=180) {
-			if(insidePipe) insidePipe = false;
-			else insidePipe = true;
+			if(insidePipe) insidePipe=false;
+			else insidePipe=true;
 			
-			moving = true;
-			wait = 0;
+			moving=true;
+			wait=0;
 		}
-		
 		if(moving) {
 			if(insidePipe) setVelY(-3);
 			else setVelY(3);
 			
-			pixelsTravelled += velY;
+			pixelsTravelled+=velY;
 			
-			if(pixelsTravelled>=getHeight() || pixelsTravelled<=-getHeight()) {
-				pixelsTravelled = 0;
-				moving = false;
+			if(pixelsTravelled>=getHeight()||pixelsTravelled<=-getHeight()) {
+				pixelsTravelled=0;
+				moving=false;
 				
 				setVelY(0);
 			}
 		}
+		
 	}
 
 }

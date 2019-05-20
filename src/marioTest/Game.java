@@ -9,6 +9,10 @@ import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -17,6 +21,7 @@ import input.KeyInput;
 import input.MouseInput;
 import mario.entity.Entity;
 import mario.entity.Player;
+import mario.tile.Tile;
 import mario.tile.Wall;
 import mariogfx.SpriteSheet;
 import mariogfx.gui.Launcher;
@@ -27,28 +32,27 @@ public class Game extends Canvas implements Runnable{
 	public static final int HEIGHT=180;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
-	
-	
 	private Thread thread;
 	private boolean running= false;
-	private BufferedImage level1 ;
-	private BufferedImage level2 ;
+//	private BufferedImage level1 ;
+//	private BufferedImage level2 ;
 	private static BufferedImage[] levels;
-	private static BufferedImage backgrand;
-
-	private static int playerX,playerY;
-	private static int level = 0;
+	private static BufferedImage background;
+	
+	private static int level=0;
 	
 	public static int coins = 0;
-	
 	public static int lives = 5;
 	public static int deathScreenTime = 0;
+	public static int deathY = 0;
 	
 	public static boolean showDeathScreen = true;
 	public static boolean gameOver = false;
 	public static boolean playing = false;
 	
 	public static Handler handler;
+	
+	public static int playerX,playerY;
 	
 	public static SpriteSheet sheet;
 	
@@ -64,19 +68,24 @@ public class Game extends Canvas implements Runnable{
 	public static Sprite powerUp;
 	public static Sprite coin;
 	public static Sprite star;
+	public static Sprite fireball;
+	public static Sprite flower;
 
 	public static Sprite usedPowerUp;
 
-	public static Sprite [] player ;
-	public static Sprite [] goomba;
-	public static Sprite [] flag;
-	public static Sprite [] particle;
-
-//	public static Sound jump;
-//	public static Sound goombastomp;
-//	public static Sound levelComplete;
-//	public static Sound loseLife;
-//	public static Sound themeSong;// for the sound
+	public static Sprite[] player ;
+	public static Sprite[] goomba;
+	public static Sprite[] flag;
+	public static Sprite[] particle;
+	public static Sprite[] firePlayer;
+	
+	public static Sound jump;
+	public static Sound goombastomp;
+	public static Sound levelcomplete;
+	public static Sound losealife;
+	public static Sound themesong;
+	public static Sound damage;
+	
 
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
@@ -102,40 +111,52 @@ public class Game extends Canvas implements Runnable{
 		 coin = new Sprite(sheet, 5, 1);
 		 powerUp = new Sprite(sheet,3,1);
 		 usedPowerUp = new Sprite(sheet,4,1);
-		 star = new Sprite(sheet,7,1);
+		 star = new Sprite(sheet, 7, 1);
+		 fireball = new Sprite(sheet, 9, 1);
+		 flower = new Sprite(sheet, 8, 1);
+
 		 player = new Sprite[10];
 		 goomba = new Sprite[10];
 		 flag = new Sprite[3];
 		 particle = new Sprite[6];
+		 firePlayer = new Sprite[10];//10?
+		 
 		 levels = new BufferedImage[2];
 		 
 		 for(int i=0; i<player.length;i++) {
 			 player [i] = new Sprite(sheet, i+1, 16);
 		 }
+		 
 		 for(int i=0; i<goomba.length;i++) {
 			 goomba [i] = new Sprite(sheet, i+1, 15);
 		 }
-		 for (int i = 0; i < flag.length; i++) {
-			flag[i] = new Sprite(sheet, 2, i+1);
-		}
-		 for(int i=0;i<particle.length;i++) {
-			 particle[i] = new Sprite(sheet,i+1,14);
+		 
+		 for(int i=0; i<flag.length;i++) {
+			 flag[i] = new Sprite(sheet, i+1, 2);
+		 }
+		 
+		 for(int i=0; i<particle.length;i++) {
+			 particle[i] = new Sprite(sheet, i+1, 14);
+		 }
+		 
+		 for(int i=0;i<firePlayer.length;i++) {
+			 firePlayer[i] = new Sprite(sheet, i+11, 16);
 		 }
 		 
 		 try {
 			levels[0] = ImageIO.read(getClass().getResource("/level.png"));
-			levels[0] = ImageIO.read(getClass().getResource("/level2.png"));
-			backgrand= ImageIO.read(getClass().getResource("/backgrand.png"));
-			//don't have level2 picture right now
+			levels[1] = ImageIO.read(getClass().getResource("/level2.png"));
+			background = ImageIO.read(getClass().getResource("/background.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		 jump = new Sound("/smb jump.mp3");
-//		 goombastomp = new Sound("/smb goombastomp.mp3");
-//		 levelComplete = new Sound("/smb levelComplete.mp3");
-//		 loseLife = new Sound("/smb loseLife.mp3");
-//		 themeSong = new Sound("/smb themeSong.mp3");//for the sound
-
+		 
+		 jump = new Sound("/audio/jump.wav");
+		 goombastomp = new Sound("/audio/goombastomp.wav");
+		 levelcomplete = new Sound("/audio/levelcomplete.wav");
+		 losealife = new Sound("/audio/losealife.wav");
+		 themesong = new Sound("/audio/themesong.wav");
+		 damage = new Sound("/audio/damage.wav");
 //		 handler.createLevel(image);
 //		 handler.addEntiy(new Player(300, 512, 32, 32, true, Id.player, handler));
 //		 handler.addTile(new Wall(200, 200, 64, 64, true, Id.wall,handler));
@@ -195,20 +216,24 @@ public class Game extends Canvas implements Runnable{
 		}
 		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
 		
-		if(!showDeathScreen) {
-			g.drawImage(backgrand, 0, 0, getWidth(), getHeight(), null);
-
+//		g.setColor(Color.BLACK);
+//		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
 		
-		}else {
+		if(!showDeathScreen) {
+		g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+		
+		}
+		if(showDeathScreen) {
 			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, getWidth(), getHeight());
+			g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
+			if(!gameOver) {
+			g.drawImage(player[0].getBufferedImage(), 500, 300, 100, 100,null);
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Courier",Font.BOLD,50));
-			if(!gameOver) {
-				g.drawImage(player[0].getBufferedImage(), 500, 300, 100, 100,null);
-			
-				g.drawString("x"+lives, 610, 400);
+			g.drawString("x"+lives, 610, 400);
 			}else {
+				g.setColor(Color.WHITE);
+				g.setFont(new Font("Courier",Font.BOLD,50));
 				g.drawString("Game Over :(", 300, 400);
 			}
 		}
@@ -230,13 +255,7 @@ public class Game extends Canvas implements Runnable{
 		}
 		if(showDeathScreen&&!gameOver&&playing) deathScreenTime++;
 		if(deathScreenTime>=180) {
-			deathScreenTime=0;
-			handler.clearLevel();
-			handler.createLevel(levels[level]);
-			showDeathScreen = false;
-
-//			themeSong.play();//for the sound
-	/*		if(!gameOver) {
+			if(!gameOver) {
 			showDeathScreen = false;
 			deathScreenTime=0;
 			handler.clearLevel();
@@ -246,7 +265,8 @@ public class Game extends Canvas implements Runnable{
 				deathScreenTime=0;
 				playing=false;
 				gameOver=false;
-			}*/
+			}
+			themesong.play();
 		}
 	}
 	
@@ -263,8 +283,9 @@ public class Game extends Canvas implements Runnable{
 		
 		handler.clearLevel();
 		handler.createLevel(levels[level]);
-//		Game.themeSong.close();
-//		Game.levelComplete.play();  for the sound
+		
+		Game.themesong.close();
+		Game.levelcomplete.play();
 	}
 	
 	public static Rectangle getVisibleArea() {
@@ -279,6 +300,24 @@ public class Game extends Canvas implements Runnable{
 			}
 		}
 		return new Rectangle(playerX-(getFrameWidth()/2-5), playerY-(getFrameHeight()/2-5),getFrameWidth()+360,getFrameHeight()+360);
+	}
+	
+	public static int getDeathY() {
+		LinkedList<Tile> tempList = handler.tile;
+		
+		Comparator<Tile> tileSorter = new Comparator<Tile>() {
+
+			@Override
+			public int compare(Tile t1, Tile t2) {
+				if(t1.getY()>t2.getY()) return -1;
+				if(t1.getY()<t2.getY()) return 1;
+				return 0;
+			}
+			
+		};
+		
+		Collections.sort(tempList,tileSorter);
+		return tempList.getFirst().getY()+tempList.getFirst().getHeight();
 	}
 	
 	public static void main(String[] args) {

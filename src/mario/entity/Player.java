@@ -17,16 +17,19 @@ public class Player extends Entity {
 
 	private int frame = 0;
 	private int frameDelay = 0;
+	private int invincibilityTime = 0;
+	private int particleDelay = 0;
+	private int restoreTime;
 	
 	private boolean animate = false;
+	private boolean invincible = false;
+	private boolean restoring;
 	
 	private PlayerState state;
 	
 	private  int pixelsTravelled = 0;
-	private int invicibilityTime = 0;
-	private int particleDelay = 0;
+	
 	private Random random;
-	private boolean invincible = false;
 	
 	public Player(int x,int y,int width,int height,Id id ,Handler handler) {
 		super(x, y, width, height, id, handler);
@@ -38,41 +41,55 @@ public class Player extends Entity {
 
 
 	public void render(Graphics g) {
+		if(state==PlayerState.FIRE) {
 		if(facing==0) {
-			g.drawImage(Game.player[frame+5].getBufferedImage(), x, y,width,height, null );
+			g.drawImage(Game.firePlayer[frame+4].getBufferedImage(), x, y,width,height, null );
 
 		}else if(facing==1){
-			g.drawImage(Game.player[frame].getBufferedImage(), x, y,width,height, null );
+			g.drawImage(Game.firePlayer[frame].getBufferedImage(), x, y,width,height, null );
 		}
+	  }else {
+			if(facing==0) {
+				g.drawImage(Game.player[frame+5].getBufferedImage(), x, y,width,height, null );
+
+			}else if(facing==1){
+				g.drawImage(Game.player[frame].getBufferedImage(), x, y,width,height, null );
+			}
+	  }
 	}
 
 	public void tick() {
 		x+=velX;
 		y+=velY;
 		
+		if(getY()>Game.deathY) die();
+		
 		if(invincible) {
-			if(facing ==0) handler.addTile(new Trail(getX(),getY(),getWidth(),getHeight(),false,Id.trail,handler));
-			else if(facing ==1) handler.addTile(new Trail(getX(),getY(),getWidth(),getHeight(),false,Id.trail,handler));
-			
+			if(facing==0) handler.addTile(new Trail(getX(), getY(), getWidth(), getHeight(), false, Id.trail, handler,Game.player[frame+5].getBufferedImage()));
+			else if(facing==1) handler.addTile(new Trail(getX(), getY(), getWidth(), getHeight(), false, Id.trail, handler,Game.player[frame].getBufferedImage()));
 			particleDelay++;
 			if(particleDelay>=3) {
-				handler.addEntity(new Particle(getX()+random.nextInt(getWidth()),getY()+random.nextInt(getHeight()),12,10,Id.particle, handler));		
-				
-				particleDelay = 0;
+				handler.addEntity(new Particle(getX()+(random.nextInt(getWidth())), getY()+(random.nextInt(getHeight())), 10, 10, Id.particle, handler));
+				particleDelay=0;
 			}
-			
-			invicibilityTime++;
-			if(invicibilityTime>=600) {
-				invincible = false;
-				invicibilityTime = 0;
+			invincibilityTime++;
+			if(invincibilityTime>=600) {
+				invincible=false;
+				invincibilityTime=0;
 			}
-			
 			if(velX==5) setVelX(8);
 			else if(velX==-5) setVelX(-8);
 		}else {
 			if(velX==8) setVelX(5);
 			else if(velX==-8) setVelX(-5);
-			
+		}
+		
+		if(restoring) {
+			restoreTime++;
+			if(restoreTime>=90) {
+				restoring=false;
+				restoreTime=0;
+			}
 		}
 //		if (goingDownPipe) {
 //			pixelsTravelled+=velX;
@@ -83,13 +100,15 @@ public class Player extends Entity {
 	//	if (y+height>=900) y=900-height;
 	//	if(velX!=0 ) animate= true;
 	//	else animate = false;
+		
+		
+//tile for loop
 		for(int i=0;i<handler.tile.size();i++) {
 			Tile t = handler.tile.get(i);
-			if (t.isSolid()&&!goingDownPipe) {
-				if(getBounds().intersects(t.getBounds())) {
-					if(t.getId()==Id.flag) Game.switchLevel();
-				}
-				
+			if(getBounds().intersects(t.getBounds())) {
+				if(t.getId()==Id.flag) Game.switchLevel();
+			}
+			if (t.isSolid()&&goingDownPipe==false) {
 				if ( getBoundsTop().intersects(t.getBounds())) {
 					setVelY(0);
 					if(jumping&&!goingDownPipe) {
@@ -99,31 +118,36 @@ public class Player extends Entity {
 						
 					}
 					if (t.getId()== Id.powerUp) {
-						if (getBoundsTop().intersects(t.getBounds())) 
+						if (getBoundsTop().intersects(t.getBounds())) {
 							t.activated=true;
+						}
 					}
 				}
 				if(getBoundsBottom().intersects(t.getBounds())) {//error:forget the (t.)getBounds() make the brick can't move up and down
 					setVelY(0);
 					if(falling) falling=false;
 				}else if(!falling&&!jumping) {
-					falling = true;//this make the player can fall from the wall 	
-					gravity = 0.8;
-				}
-				
+						gravity = 0.8;
+						falling = true;//this make the player can fall from the wall 
+//						System.out.println("here");
+					}
+			
 				if(getBoundsLeft().intersects(t.getBounds())){
 					setVelX(0);
-					x = t.getX()+ width;//delete the t to make the coin scream cover the block
+					x = t.getX()+ width;
 				}
 				if(getBoundsRight().intersects(t.getBounds())){
 					setVelX(0);
-					x = t.getX()- t.width;
+					x = t.getX()- width;
 				}
 		
 			}
 				
 				
 		}
+		
+		
+//entity for loop		
 			for(int i=0;i<handler.entity.size();i++) {
 				Entity e = handler.entity.get(i);//scan the entity licked list ,whatever the entity it scans ,it will create an entity object
 				
@@ -147,17 +171,17 @@ public class Player extends Entity {
 							Game.lives++;
 							e.die();
 						}
-//						break;
+						break;
 					}
 					
 				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
-					if(invincible) {
-						e.die();
-					}else {
-						if (getBoundsBottom().intersects(e.getBoundsTop())) {
+					if(invincible&&getBounds().intersects(e.getBounds())) e.die();	
+					else {
+						if (getBoundsLeft().intersects(e.getBoundsTop())) {
 							if(e.getId()!=Id.towerBoss) {
 								e.die();
-				//				Game.goombastomp.play();
+								
+								Game.goombastomp.play();
 							}
 							else if(e.attackable) {
 								e.hp--;
@@ -174,105 +198,21 @@ public class Player extends Entity {
 							}
 						}else if (getBounds().intersects(e.getBounds())) {
 							if (state==PlayerState.BIG) {
-								state = PlayerState.SMALL;
-								width/=3;
-								height/=3;
-								x+=width;
-								y+=height;
-							}else if (state==PlayerState.SMALL) {
-								die();	
+								takeDamage();
 							}
 					}
-					}
-					if (getBoundsBottom().intersects(e.getBoundsTop())) {
-						if(e.getId()!=Id.towerBoss) e.die();
-						else if(e.attackable) {
-							e.hp--;
-							e.falling=true;
-							e.gravity=3.0;
-							e.bossState = BossState.RECOVERING;
-							e.attackable=false;
-							e.phaseTime=0;
-							
-							
-							jumping=true;
-							falling=false;
-							gravity=3.5;
-						}
-					}else if (getBounds().intersects(e.getBounds())) {
-						if (state==PlayerState.BIG) {
-							state = PlayerState.SMALL;
-							width/=3;
-							height/=3;
-							x+=width;
-							y+=height;
-						}else if (state==PlayerState.SMALL) {
-							die();	
-						}
+					
+				
 						
 					}
-					
-				}//the first 3 if has some issues so that mushroom, goomba, upTower, towerBoss and 
-				//plant cannot collide correctly
-				else if(e.getId()==Id.coin) {
+				}else if(e.getId()==Id.coin) {
 					if(getBounds().intersects(e.getBounds())&&e.getId()==Id.coin) {
 						Game.coins++;
 						e.die();
 					}
 				}else if(e.getId()==Id.koopa) {
-					if(invincible) e.die();
-					else{
-						if(e.koopaState==KoopaState.WALKING) {
-							if(getBoundsBottom().intersects(e.getBoundsTop())) {
-								e.koopaState=KoopaState.SHELL;
-								
-								jumping=true;
-								falling=false;
-								gravity=3.5;
-							}else if(getBounds().intersects(e.getBounds())) die();
-						}else if(e.koopaState==KoopaState.SHELL) {
-							if(getBoundsBottom().intersects(e.getBoundsTop())) {
-								e.koopaState=KoopaState.SPINNING;
-								
-								int dir = random.nextInt(2);
-								
-								switch(dir) {
-								case 0:
-									e.setVelX(-10);
-									facing = 0;
-									break;
-								case 1:
-									e.setVelX(10);
-									facing = 1;
-
-									break;
-								}
-								
-								jumping=true;
-								falling=false;
-								gravity=3.5;
-							}
-							
-							if(getBoundsLeft().intersects(e.getBoundsRight())) {
-								e.setVelX(-10);
-								e.koopaState=KoopaState.SPINNING;
-							}
-							if(getBoundsRight().intersects(e.getBoundsLeft())) {
-								e.setVelX(10);
-								e.koopaState=KoopaState.SPINNING;
-							}
-							
-						}else if(e.koopaState==KoopaState.SPINNING) {
-							if(getBoundsBottom().intersects(e.getBoundsTop())) {
-								e.koopaState=KoopaState.SHELL;
-								
-								jumping=true;
-								falling=false;
-								gravity=3.5;
-							}else if(getBounds().intersects(e.getBounds())) die();
-						}
-					}
-					
+					if(invincible&&getBounds().intersects(e.getBounds())) e.die();	
+					else {
 					if(e.koopaState==KoopaState.WALKING) {
 						if(getBoundsBottom().intersects(e.getBoundsTop())) {
 							e.koopaState=KoopaState.SHELL;
@@ -280,7 +220,7 @@ public class Player extends Entity {
 							jumping=true;
 							falling=false;
 							gravity=3.5;
-						}else if(getBounds().intersects(e.getBounds())) die();
+						}else if(getBounds().intersects(e.getBounds())) takeDamage();
 					}else if(e.koopaState==KoopaState.SHELL) {
 						if(getBoundsBottom().intersects(e.getBoundsTop())) {
 							e.koopaState=KoopaState.SPINNING;
@@ -320,11 +260,28 @@ public class Player extends Entity {
 							jumping=true;
 							falling=false;
 							gravity=3.5;
-						}else if(getBounds().intersects(e.getBounds())) die();
+						}else if(getBounds().intersects(e.getBounds())) takeDamage();
 					}
-				}else if(e.getId() ==Id.star) {
-					invincible = true;
+			   	   }
+				}else if(e.getId()==Id.star) {
+					if(getBounds().intersects(e.getBounds())) {
+						invincible = true;
+						e.die();
+					}
+				}else if(e.getId()==Id.flower) {
+					if(getBounds().intersects(e.getBounds())) {
+						if(state==PlayerState.SMALL) {
+							int tpX = getX();
+							int tpY = getY();
+							width+=(width/3);
+							height+=(height/3);
+							setX(tpX-width);
+							setY(tpY-height);
+						}
+					state = PlayerState.FIRE;
 					e.die();
+						
+					}
 				}
 			}
 
@@ -366,6 +323,10 @@ public class Player extends Entity {
 						case 2:
 							setVelY(-5);
 							setVelX(0);
+//							setY(273);
+//							setX(273);
+//							System.out.println(x);
+//							System.out.println(y);
 							pixelsTravelled+=velY;
 							break;
 						}
@@ -380,7 +341,18 @@ public class Player extends Entity {
 							if(falling) falling=false;
 							goingDownPipe=false;
 						}
-
+//						if(getBoundsLeft().intersects(t.getBounds())){
+//							setVelX(0);
+//							x = t.getX()+ t.width;
+//							if(falling) falling=false;
+//							goingDownPipe=false;
+//						}
+//						if(getBoundsRight().intersects(t.getBounds())){
+//							setVelX(0);
+//							x = t.getX()- t.width;
+//							if(falling) falling=false;
+//							goingDownPipe=false;
+//						}
 					}
 			
 				}
@@ -389,5 +361,32 @@ public class Player extends Entity {
 		
 
 	}
+	
+public void takeDamage() {
+	
+	if(restoring) return;
+	
+	if(state==PlayerState.SMALL) {
+		die();
+		return;
+	}else if(state==PlayerState.BIG) {
+		width-=(width/4);
+		height-=(height/4);
+		x+=width/4;
+		y+=height/4;
+		
+		state=PlayerState.SMALL;
+		Game.damage.play();
+		restoring=true;
+		restoreTime=0;
+		return;
+	}else if(state==PlayerState.FIRE) {
+		state=PlayerState.BIG;
+		Game.damage.play();
+		restoring=true;
+		restoreTime=0;
+		return;
+	}
+}
 	
 }

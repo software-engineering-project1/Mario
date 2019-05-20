@@ -1,5 +1,5 @@
 package mario.state;
 
 public enum PlayerState {
-BIG,SMALL
+BIG,SMALL, FIRE
 }
