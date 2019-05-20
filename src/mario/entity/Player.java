@@ -156,7 +156,10 @@ public class Player extends Entity {
 						e.die();
 					}else {
 						if (getBoundsBottom().intersects(e.getBoundsTop())) {
-							if(e.getId()!=Id.towerBoss) e.die();
+							if(e.getId()!=Id.towerBoss) {
+								e.die();
+								Game.goombastomp.play();
+							}
 							else if(e.attackable) {
 								e.hp--;
 								e.falling=true;

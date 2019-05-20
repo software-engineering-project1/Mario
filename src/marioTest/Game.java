@@ -71,6 +71,12 @@ public class Game extends Canvas implements Runnable{
 	public static Sprite [] flag;
 	public static Sprite [] particle;
 
+	public static Sound jump;
+	public static Sound goombastomp;
+	public static Sound levelComplete;
+	public static Sound loseLife;
+	public static Sound themeSong;
+
 	public Game() {
 		Dimension size = new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
 		setPreferredSize(size);
@@ -122,6 +128,12 @@ public class Game extends Canvas implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		 jump = new Sound("/smb jump.mp3");
+		 goombastomp = new Sound("/smb goombastomp.mp3");
+		 levelComplete = new Sound("/smb levelComplete.mp3");
+		 loseLife = new Sound("/smb loseLife.mp3");
+		 themeSong = new Sound("/smb themeSong.mp3");
+
 //		 handler.createLevel(image);
 //		 handler.addEntiy(new Player(300, 512, 32, 32, true, Id.player, handler));
 //		 handler.addTile(new Wall(200, 200, 64, 64, true, Id.wall,handler));
@@ -218,7 +230,13 @@ public class Game extends Canvas implements Runnable{
 		}
 		if(showDeathScreen&&!gameOver&&playing) deathScreenTime++;
 		if(deathScreenTime>=180) {
-			if(!gameOver) {
+			deathScreenTime=0;
+			handler.clearLevel();
+			handler.createLevel(levels[level]);
+			showDeathScreen = false;
+
+			themeSong.play();
+	/*		if(!gameOver) {
 			showDeathScreen = false;
 			deathScreenTime=0;
 			handler.clearLevel();
@@ -228,7 +246,7 @@ public class Game extends Canvas implements Runnable{
 				deathScreenTime=0;
 				playing=false;
 				gameOver=false;
-			}
+			}*/
 		}
 	}
 	
@@ -245,6 +263,8 @@ public class Game extends Canvas implements Runnable{
 		
 		handler.clearLevel();
 		handler.createLevel(levels[level]);
+		Game.themeSong.close();
+		Game.levelComplete.play();
 	}
 	
 	public static Rectangle getVisibleArea() {

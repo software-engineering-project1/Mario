@@ -46,6 +46,7 @@ public abstract class Entity {
 		Game.lives--;
 		Game.showDeathScreen=true;
 		if(Game.lives<=0) Game.gameOver=true;
+//		Game.loseALife.play();
 		}
 	}
 	public abstract  void render(Graphics g) ;//why we use graphics instead of buffered strategy is we need to create many buffered strategies
