@@ -50,7 +50,7 @@ public class Player extends Entity {
 		}
 	  }else {
 			if(facing==0) {
-				g.drawImage(Game.player[frame+5].getBufferedImage(), x, y,width,height, null );
+				g.drawImage(Game.player[frame+4].getBufferedImage(), x, y,width,height, null );
 
 			}else if(facing==1){
 				g.drawImage(Game.player[frame].getBufferedImage(), x, y,width,height, null );

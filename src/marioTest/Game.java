@@ -34,8 +34,8 @@ public class Game extends Canvas implements Runnable{
 	public static final String TITLE = "Mario";
 	private Thread thread;
 	private boolean running= false;
-//	private BufferedImage level1 ;
-//	private BufferedImage level2 ;
+	private BufferedImage level1 ;
+	private BufferedImage level2 ;
 	private static BufferedImage[] levels;
 	private static BufferedImage background;
 	
@@ -115,11 +115,11 @@ public class Game extends Canvas implements Runnable{
 		 fireball = new Sprite(sheet, 9, 1);
 		 flower = new Sprite(sheet, 8, 1);
 
-		 player = new Sprite[10];
+		 player = new Sprite[8];
 		 goomba = new Sprite[10];
 		 flag = new Sprite[3];
 		 particle = new Sprite[6];
-		 firePlayer = new Sprite[10];//10?
+		 firePlayer = new Sprite[8];//10?
 		 
 		 levels = new BufferedImage[2];
 		 
@@ -140,7 +140,7 @@ public class Game extends Canvas implements Runnable{
 		 }
 		 
 		 for(int i=0;i<firePlayer.length;i++) {
-			 firePlayer[i] = new Sprite(sheet, i+11, 16);
+			 firePlayer[i] = new Sprite(sheet, i+9, 16);
 		 }
 		 
 		 try {
@@ -216,8 +216,6 @@ public class Game extends Canvas implements Runnable{
 		}
 		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
 		
-//		g.setColor(Color.BLACK);
-//		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
 		
 		if(!showDeathScreen) {
 		g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
