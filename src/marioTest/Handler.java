@@ -45,8 +45,9 @@ public class Handler {//a LickedList to add entities
 	
 		
 	public void tick() {
-		for(Entity en: entity) {
-			en.tick();
+		for(int i = 0; i<entity.size(); i++) {
+			Entity e = entity.get(i);
+			e.tick();//
 		}
 		for(Tile ti:tile) {
 			if(Game.getVisibleArea()!=null&&ti.getBounds().intersects(Game.getVisibleArea())) ti.tick();
