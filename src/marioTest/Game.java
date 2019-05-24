@@ -9,6 +9,11 @@ import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -28,14 +33,23 @@ import mariogfx.gui.Launcher;
 import mariogfx.Sprite;
 
 public class Game extends Canvas implements Runnable{
+	//Databses information
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/employee";
+	private static final String USER_NAME = "root";
+	private static final String PASSWORD = "Liujinyi0328";
+	
+	
+	
+	
+	
 	public static final int WIDTH=320;	
 	public static final int HEIGHT=180;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
 	private Thread thread;
 	private boolean running= false;
-	private BufferedImage level1 ;
-	private BufferedImage level2 ;
+//	private BufferedImage level1 ;
+//	private BufferedImage level2 ;
 	private static BufferedImage[] levels;
 	private static BufferedImage background;
 	
@@ -169,7 +183,9 @@ public class Game extends Canvas implements Runnable{
 	}
 	private synchronized void stop() {
 		if(!running) return ;//if running is true you get out of this method
+		else {
 		running = false;
+		}
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
@@ -216,6 +232,8 @@ public class Game extends Canvas implements Runnable{
 		}
 		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
 		
+//		g.setColor(Color.BLACK);
+//		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
 		
 		if(!showDeathScreen) {
 		g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
@@ -233,8 +251,10 @@ public class Game extends Canvas implements Runnable{
 				g.setColor(Color.WHITE);
 				g.setFont(new Font("Courier",Font.BOLD,50));
 				g.drawString("Game Over :(", 300, 400);
+				}
+
 			}
-		}
+		
 		if(playing) g.translate(cam.getX(), cam.getY());//make it move
 		if(!showDeathScreen&&playing)handler.render(g);
 		else if(!playing) launcher.render(g);
@@ -319,6 +339,7 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public static void main(String[] args) {
+		
 		Game game =new Game();
 		JFrame frame =new JFrame (TITLE);
 		
@@ -329,6 +350,30 @@ public class Game extends Canvas implements Runnable{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		game.start();
+		try {
+			Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			System.out.println("Connected.");
+
+		Statement st = conn.createStatement();
+
+		ResultSet rs = st.executeQuery("SELECT * FROM employees");
+
+		while (rs.next()){
+			int employeeID = rs.getInt("empno");
+			String firstName = rs.getString("firstname");
+			String familyName = rs.getString("familyname");
+			String job = rs.getString("job");
+			int salary = rs.getInt("salary");
+
+			System.out.println(employeeID + "\t" + firstName + 	"\t" + familyName + "\t" + job + "\t" + salary);
+		}
+		} catch (SQLException e) {
+			System.out.println("Failed to connect.");
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
 

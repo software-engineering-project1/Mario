@@ -152,21 +152,29 @@ public class Player extends Entity {
 				Entity e = handler.entity.get(i);//scan the entity licked list ,whatever the entity it scans ,it will create an entity object
 				
 				if (e.getId()==Id.mushroom) {
-					if(getBounds().intersects(e.getBounds())) {
-						int tpX = getX();
-						int tpY = getY();
-						width += (width/3);
-						height += (height/3);
-						setX(tpX-width);
-						setY(tpY-height);
-						
-						if(state == PlayerState.SMALL) state = PlayerState.BIG;
-						e.die();
-						
+					switch (e.getType()) {
+					case 0:
+						if(getBounds().intersects(e.getBounds())) {
+							int tpX = getX();
+							int tpY = getY();
+							width+=(width/3);
+							height+=(height/3);
+							setX(tpX-width);
+							setY(tpY-height);
+							if (state == PlayerState.SMALL) state = PlayerState.BIG;
+							e.die();
+						}
+						break;
+
+					case 1:
+						if(getBounds().intersects(e.getBounds())) {
+							Game.lives++;
+							e.die();
+						}
+						break;
 					}
-				}
 					
-				else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
+				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
 					if(invincible&&getBounds().intersects(e.getBounds())) e.die();	
 					else {
 						if (getBoundsLeft().intersects(e.getBoundsTop())) {
@@ -192,18 +200,6 @@ public class Player extends Entity {
 							if (state==PlayerState.BIG) {
 								takeDamage();
 							}
-//							else if (getBounds().intersects(e.getBounds())) {
-//								if (state==PlayerState.BIG) {
-//									state = PlayerState.SMALL;
-//									width/=2;
-//									height/=2;
-//									x+=width*5;
-//									y+=height;
-//								}else if (state==PlayerState.SMALL) {
-//									die();	
-//								}
-//								
-//							}
 					}
 					
 				
@@ -273,7 +269,8 @@ public class Player extends Entity {
 						e.die();
 					}
 				}else if(e.getId()==Id.flower) {
-					if(getBounds().intersects(e.getBounds())) {
+					
+					if(getBounds().intersects(e.getBounds())&&e.getType()==2) {
 						if(state==PlayerState.SMALL) {
 							int tpX = getX();
 							int tpY = getY();
@@ -283,8 +280,7 @@ public class Player extends Entity {
 							setY(tpY-height);
 						}
 					state = PlayerState.FIRE;
-					e.die();
-						
+					e.die();	
 					}
 				}
 			}

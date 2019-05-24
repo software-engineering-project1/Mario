@@ -53,10 +53,7 @@ public abstract class Entity {
 		}
 	}
 	public abstract  void render(Graphics g) ;//why we use graphics instead of buffered strategy is we need to create many buffered strategies
-	public abstract  void tick() ;/*{
-		x+=velX;
-		y+=velY;
-	}*/
+	public abstract  void tick();
 	
 
 	public int getX() {

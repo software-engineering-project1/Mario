@@ -27,13 +27,16 @@ public class Handler {//a LickedList to add entities
 	public LinkedList <Tile> tile =new LinkedList <Tile>();
 
 	public void render(Graphics g) {//because we have had graphic in the Game
-		for(Entity en: entity) {
+		for(int i=0;i<entity.size();i++) {
+			Entity en = entity.get(i);
 			if(Game.getVisibleArea()!=null&&en.getBounds().intersects(Game.getVisibleArea())&&en.getId()!=Id.particle) en.render(g);
 		}
-		for(Tile ti: tile) {
+		for(int i=0;i<tile.size();i++) {
+			Tile  ti = tile.get(i);
 			if(Game.getVisibleArea()!=null&&ti.getBounds().intersects(Game.getVisibleArea())) ti.render(g);
 		}
-		for(Entity en: entity) {
+		for(int i=0;i<entity.size();i++) {
+			Entity en = entity.get(i);
 			if(Game.getVisibleArea()!=null&&en.getBounds().intersects(Game.getVisibleArea())&&en.getId()==Id.particle) en.render(g);
 		}
 		
@@ -45,11 +48,12 @@ public class Handler {//a LickedList to add entities
 	
 		
 	public void tick() {
-		for(int i = 0; i<entity.size(); i++) {
+		for(int i=0; i<entity.size();i++) {
 			Entity e = entity.get(i);
-			e.tick();//
+			e.tick();
 		}
-		for(Tile ti:tile) {
+		for(int i=0;i<tile.size();i++) {
+			Tile ti = tile.get(i);
 			if(Game.getVisibleArea()!=null&&ti.getBounds().intersects(Game.getVisibleArea())) ti.tick();
 		}
 	}
@@ -77,15 +81,15 @@ public class Handler {//a LickedList to add entities
 				if(red==0&&blue==0&&green==0) addTile(new Wall(x*32, y*32, 64, 64, true, Id.wall, this));
 				if(red==0&&blue==255&&green==0) addEntity(new Player(x*32, y*32, 48, 48,Id.player, this));//0000ff
 //				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));//ff0000
-//				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
+				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
 				if(red==255&&green==119&&blue==0) addEntity(new Koopa(x*32, y*32, 64, 64, Id.koopa,this));
-//				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00
+				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00
 				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*32, y*32, 64, 64*5,true,Id.pipe,this,128-green,true));//ff7700
 				if(red==255&&green==250&&blue==0) addEntity(new Coin(x*32, y*32, 64, 64, Id.coin, this));
 				if(red==255&&green==0&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));
 				if(red==0&&green==255&&blue==0) addTile(new Flag(x*32, y*32, 64, 64*5, true, Id.flag, this));
 				if(red==255&&green==255&&blue==0) addEntity(new PowerStar(x*32, y*32, 64, 64,Id.star,this));
-				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.flower,this,Game.flower,0));
+//				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.flower,2));
 			
 			
 			
