@@ -80,9 +80,9 @@ public class KeyInput implements KeyListener{
 						break;
 					}
 				}
-//				case KeyEvent.VK_Q:
-//					en.die();
-//					break;
+				case KeyEvent.VK_Q:
+					en.die();
+					break;
 				}
 			}
 

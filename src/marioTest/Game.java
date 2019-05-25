@@ -11,43 +11,42 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.concurrent.LinkedBlockingDeque;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import input.KeyInput;
 import input.MouseInput;
 import mario.entity.Entity;
-import mario.entity.Player;
 import mario.tile.Tile;
-import mario.tile.Wall;
 import mariogfx.SpriteSheet;
 import mariogfx.gui.Launcher;
 import mariogfx.Sprite;
 
 public class Game extends Canvas implements Runnable{
-	//Databses information
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/employee";
+	 //Databses information
+
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/test";
 	private static final String USER_NAME = "root";
 	private static final String PASSWORD = "Liujinyi0328";
 	
 	
-	
-	
-	
+	public static int i =0;
+public static int y = 100;
 	public static final int WIDTH=320;	
 	public static final int HEIGHT=180;
 	public static final int SCALE = 4;
 	public static final String TITLE = "Mario";
-	private Thread thread;
-	private boolean running= false;
+	public static JFrame frame =new JFrame (TITLE);
+	private static Thread thread;
+	private static boolean running= false;
 //	private BufferedImage level1 ;
 //	private BufferedImage level2 ;
 	private static BufferedImage[] levels;
@@ -56,9 +55,10 @@ public class Game extends Canvas implements Runnable{
 	private static int level=0;
 	
 	public static int coins = 0;
-	public static int lives = 5;
+	public static int lives = 1;
 	public static int deathScreenTime = 0;
 	public static int deathY = 0;
+	public static int score = 0;
 	
 	public static boolean showDeathScreen = true;
 	public static boolean gameOver = false;
@@ -181,7 +181,7 @@ public class Game extends Canvas implements Runnable{
 		thread=new Thread (this,"Thread");
 		thread.start();
 	}
-	private synchronized void stop() {
+	private synchronized static void stop() {
 		if(!running) return ;//if running is true you get out of this method
 		else {
 		running = false;
@@ -212,7 +212,13 @@ public class Game extends Canvas implements Runnable{
 				ticks++;
 				delta--;
 			}
-			render();
+				try {
+					render();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
 			frames++;
 			if(System.currentTimeMillis()-timer>1000) {
 				timer+=1000;
@@ -224,7 +230,7 @@ public class Game extends Canvas implements Runnable{
 		stop();
 		
 	}
-	public void render() {
+	public void render() throws SQLException{
 		BufferStrategy bs= getBufferStrategy();
 		if ( bs==null) {
 			createBufferStrategy(3);
@@ -247,7 +253,8 @@ public class Game extends Canvas implements Runnable{
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Courier",Font.BOLD,50));
 			g.drawString("x"+lives, 610, 400);
-			}else {
+			}else {   
+				Game.score();				
 				g.setColor(Color.WHITE);
 				g.setFont(new Font("Courier",Font.BOLD,50));
 				g.drawString("Game Over :(", 300, 400);
@@ -279,9 +286,11 @@ public class Game extends Canvas implements Runnable{
 			handler.clearLevel();
 			handler.createLevel(levels[level]);
 			}else if(gameOver) {
+				
 				showDeathScreen = false;
 				deathScreenTime=0;
 				playing=false;
+				
 				gameOver=false;
 			}
 			themesong.play();
@@ -298,6 +307,7 @@ public class Game extends Canvas implements Runnable{
 	
 	public static void switchLevel() {
 		Game.level++;
+		Game.score+=30;
 		
 		handler.clearLevel();
 		handler.createLevel(levels[level]);
@@ -337,43 +347,120 @@ public class Game extends Canvas implements Runnable{
 		Collections.sort(tempList,tileSorter);
 		return tempList.getFirst().getY()+tempList.getFirst().getHeight();
 	}
+	public static void score() throws SQLException {
+		if(gameOver&&Game.i==0) {
+				score+=lives;
+//			
+//				frame.setVisible(false);
+				
+			
+
+				int y=100;
+
+				
+				
+			    JFrame jf = new JFrame();
+			    jf.setBounds(160, 250, 500, 600);
+			    jf.setTitle("RANKING TABLE");
+			    jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    jf.getContentPane().setBackground(Color.BLACK);
+			    jf.setVisible(true);
+			    Graphics g = jf.getContentPane().getGraphics();
+			    g.setColor(Color.WHITE);
+//			    g.drawOval(100, 100, 50, 50);
+			    g.drawString("First Name", 100, 50);
+				g.drawString("Last Name", 200, 50);
+				g.drawString("Score", 300, 50);
+			  //input of user   
+			    String firstName = JOptionPane.showInputDialog("Please enter your first name");
+				String lastName = JOptionPane.showInputDialog("Please enter your last name");
+			  //insert data into database
+				try {
+					Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+					System.out.println("Connected");
+					PreparedStatement pst = conn.prepareStatement("INSERT INTO user VALUES (?,?,?);");
+					pst.setString(1, firstName);
+					pst.setString(2, lastName);
+					pst.setInt(3, score);
+					int affected = pst.executeUpdate();
+					pst.close();
+					System.out.println(affected + " row(s) changed.");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				
+				String arr1[] = new String[100];
+				String arr2[] = new String[100];
+				String arr3[] = new String[100];
+				
+				//display database
+				
+				try {
+					int j=0;
+					Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+					System.out.println("Connected");
+//				Statement st = conn.createStatement();
+//				ResultSet rs = st.executeQuery("SELECT * FROM user");
+				PreparedStatement pstm = conn.prepareStatement("SELECT * FROM user ORDER BY score DESC");
+				ResultSet rs = pstm.executeQuery();
+				g.setColor(Color.white);
+				g.drawString("First Name", 100, 50);
+				g.drawString("Last Name", 200, 50);
+				g.drawString("Score", 300, 50);
+				
+				while (rs.next()){
+					String fname = rs.getString("fName");
+					String lname = rs.getString("lName");
+					int score = rs.getInt("score");
+					arr1[j]= fname;
+					arr2[j]=lname;
+					arr3[j]=String.valueOf(score);
+					j++;
+//				    g.drawString(fname, 100, y);
+//				    g.drawString(lname, 200, y);
+//				    g.drawString(String.valueOf(score), 300, y);
+//				    y+=15;
+					System.out.println(fname + "\t" + lname + 	"\t" + score );
+				}
+				rs.close();
+				pstm.close();
+				conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			for(int i=0;i<arr1.length;i++) {
+				g.drawString(String.valueOf(i+1), 50, y);
+				g.drawString(arr1[i], 100, y);
+				g.drawString(arr2[i], 200, y);
+				g.drawString(arr3[i], 300, y);
+				y+=15;
+			}
+			Game.i++;
+		}
+	}
+
 	
 	public static void main(String[] args) {
-		
+//		
 		Game game =new Game();
-		JFrame frame =new JFrame (TITLE);
-		
-		frame.add(game);
-		frame.pack();//pack the game
-		frame.setResizable(false);//avoid resize the frame
-		frame.setLocationRelativeTo(null);//set the frame in the middle
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+////		JFrame frame =new JFrame (TITLE);
+//		
+//		frame.add(game);
+//		frame.pack();//pack the game
+//		frame.setResizable(false);//avoid resize the frame
+//		frame.setLocationRelativeTo(null);//set the frame in the middle
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setVisible(true);
+//		game.start();
+		WindowMenu win = new WindowMenu("MARIO",20,30,WIDTH*SCALE,HEIGHT*SCALE);
+		win.add(game);
+		win.pack();
+		win.setResizable(false);
+//		win.setLocation(null);
+//		win.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		win.setVisible(true);
 		game.start();
-		try {
-			Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-			System.out.println("Connected.");
-
-		Statement st = conn.createStatement();
-
-		ResultSet rs = st.executeQuery("SELECT * FROM employees");
-
-		while (rs.next()){
-			int employeeID = rs.getInt("empno");
-			String firstName = rs.getString("firstname");
-			String familyName = rs.getString("familyname");
-			String job = rs.getString("job");
-			int salary = rs.getInt("salary");
-
-			System.out.println(employeeID + "\t" + firstName + 	"\t" + familyName + "\t" + job + "\t" + salary);
-		}
-		} catch (SQLException e) {
-			System.out.println("Failed to connect.");
-			e.printStackTrace();
-		}
-		
-		
-		
 	}
 
 

@@ -162,6 +162,7 @@ public class Player extends Entity {
 							setX(tpX-width);
 							setY(tpY-height);
 							if (state == PlayerState.SMALL) state = PlayerState.BIG;
+							Game.score+=2;
 							e.die();
 						}
 						break;
@@ -169,18 +170,22 @@ public class Player extends Entity {
 					case 1:
 						if(getBounds().intersects(e.getBounds())) {
 							Game.lives++;
+							Game.score+=2;
 							e.die();
 						}
 						break;
 					}
 					
 				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
-					if(invincible&&getBounds().intersects(e.getBounds())) e.die();	
+					if(invincible&&getBounds().intersects(e.getBounds())) {
+						e.die();	
+						Game.score+=2;
+					}
 					else {
 						if (getBoundsLeft().intersects(e.getBoundsTop())) {
 							if(e.getId()!=Id.towerBoss) {
 								e.die();
-								
+								Game.score+=20;
 								Game.goombastomp.play();
 							}
 							else if(e.attackable) {
@@ -208,10 +213,14 @@ public class Player extends Entity {
 				}else if(e.getId()==Id.coin) {
 					if(getBounds().intersects(e.getBounds())&&e.getId()==Id.coin) {
 						Game.coins++;
+						Game.score++;
 						e.die();
 					}
 				}else if(e.getId()==Id.koopa) {
-					if(invincible&&getBounds().intersects(e.getBounds())) e.die();	
+					if(invincible&&getBounds().intersects(e.getBounds())) {
+						Game.score+=5;
+						e.die();	
+					}
 					else {
 					if(e.koopaState==KoopaState.WALKING) {
 						if(getBoundsBottom().intersects(e.getBoundsTop())) {
@@ -266,6 +275,7 @@ public class Player extends Entity {
 				}else if(e.getId()==Id.star) {
 					if(getBounds().intersects(e.getBounds())) {
 						invincible = true;
+						Game.score+=10;
 						e.die();
 					}
 				}else if(e.getId()==Id.flower) {
@@ -280,6 +290,7 @@ public class Player extends Entity {
 							setY(tpY-height);
 						}
 					state = PlayerState.FIRE;
+					Game.score+=10;
 					e.die();	
 					}
 				}
