@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import mario.entity.Entity;
+import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;
 
@@ -24,8 +25,8 @@ public class Plant extends Entity {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.RED);
-		g.fillRect(getX(), getY(), getWidth(), getHeight());
+		g.drawImage(Game.flower.getBufferedImage(), x, y,width,height, null );
+
 	}
 
 	@Override

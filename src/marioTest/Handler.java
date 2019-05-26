@@ -89,7 +89,7 @@ public class Handler {//a LickedList to add entities
 				if(red==0&&green==255&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));//00ffff
 				if(red==105&&green==105&&blue==105) addTile(new Flag(x*32, y*32, 64, 64*5, true, Id.flag, this));//696969
 				if(red==169&&green==169&&blue==169) addEntity(new PowerStar(x*32, y*32, 64, 64,Id.star,this));//A9A9A9
-				if(red==255&&green==182&&blue==193) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.flower,this,Game.flower,0));//FFB6C1
+				if(red==255&&green==182&&blue==193) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.flower,0));//FFB6C1
 			
 			
 			

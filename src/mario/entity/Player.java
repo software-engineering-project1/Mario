@@ -280,7 +280,7 @@ public class Player extends Entity {
 					}
 				}else if(e.getId()==Id.flower) {
 					
-					if(getBounds().intersects(e.getBounds())&&e.getType()==2) {
+					if(getBounds().intersects(e.getBounds())&&e.getType()==0) {
 						if(state==PlayerState.SMALL) {
 							int tpX = getX();
 							int tpY = getY();
@@ -291,8 +291,9 @@ public class Player extends Entity {
 						}
 					state = PlayerState.FIRE;
 					Game.score+=10;
-					e.die();	
+						
 					}
+					e.die();
 				}
 			}
 

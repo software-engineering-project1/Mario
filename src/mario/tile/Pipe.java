@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import mario.entity.mob.Plant;
+import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;
 
@@ -17,8 +18,15 @@ public class Pipe extends Tile{
 
 
 	public void render(Graphics g) {
-		g.setColor(new Color(128,128,128));
-		g.fillRect(x, y, width, height);
+g.drawImage(Game.pipe[0].getBufferedImage(), x, y, width, 64, null);
+		
+		g.drawImage(Game.pipe[1].getBufferedImage(), x, y+64, width, 64, null);
+		g.drawImage(Game.pipe[1].getBufferedImage(), x, y+128, width, 64, null);
+		g.drawImage(Game.pipe[1].getBufferedImage(), x, y+192, width, 64, null);
+		g.drawImage(Game.pipe[1].getBufferedImage(), x, y+256, width, 64, null);
+
+		g.drawImage(Game.pipe[1].getBufferedImage(), x, y+height-64, width, 64,null);
+		
 	}
 
 

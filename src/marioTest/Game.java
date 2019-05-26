@@ -92,7 +92,9 @@ public static int y = 100;
 	public static Sprite[] flag;
 	public static Sprite[] particle;
 	public static Sprite[] firePlayer;
-	
+	public static Sprite[] koopa;
+	public static Sprite[] pipe;
+
 	public static Sound jump;
 	public static Sound goombastomp;
 	public static Sound levelcomplete;
@@ -132,9 +134,11 @@ public static int y = 100;
 		 player = new Sprite[8];
 		 goomba = new Sprite[10];
 		 flag = new Sprite[3];
+		 pipe = new Sprite[2];
 		 particle = new Sprite[6];
 		 firePlayer = new Sprite[8];//10?
-		 
+		 koopa = new Sprite[8];
+
 		 levels = new BufferedImage[2];
 		 
 		 for(int i=0; i<player.length;i++) {
@@ -144,17 +148,21 @@ public static int y = 100;
 		 for(int i=0; i<goomba.length;i++) {
 			 goomba [i] = new Sprite(sheet, i+1, 15);
 		 }
-		 
+		 for(int i=0; i<koopa.length;i++) {
+			 koopa [i] = new Sprite(sheet, i+1, 12);
+		 }
 		 for(int i=0; i<flag.length;i++) {
 			 flag[i] = new Sprite(sheet, i+1, 2);
 		 }
-		 
+		 for(int i=0; i<pipe.length;i++) {
+			 pipe[i] = new Sprite(sheet, i+4, 2);
+		 }
 		 for(int i=0; i<particle.length;i++) {
 			 particle[i] = new Sprite(sheet, i+1, 14);
 		 }
 		 
 		 for(int i=0;i<firePlayer.length;i++) {
-			 firePlayer[i] = new Sprite(sheet, i+9, 16);
+			 firePlayer[i] = new Sprite(sheet, i+9, 15);
 		 }
 		 
 		 try {
@@ -171,9 +179,6 @@ public static int y = 100;
 		 losealife = new Sound("/audio/losealife.wav");
 		 themesong = new Sound("/audio/themesong.wav");
 		 damage = new Sound("/audio/damage.wav");
-//		 handler.createLevel(image);
-//		 handler.addEntiy(new Player(300, 512, 32, 32, true, Id.player, handler));
-//		 handler.addTile(new Wall(200, 200, 64, 64, true, Id.wall,handler));
 	}
 	private synchronized void start() {
 		if(running) return ;//if running is true you get out of this method
@@ -238,8 +243,7 @@ public static int y = 100;
 		}
 		Graphics g = bs.getDrawGraphics();//linking the graphic strategy to the buffered strategy
 		
-//		g.setColor(Color.BLACK);
-//		g.fillRect(0, 0, getWidth(), getHeight());//can not forget it
+
 		
 		if(!showDeathScreen) {
 		g.drawImage(background, 0, 0, getWidth(), getHeight(), null);

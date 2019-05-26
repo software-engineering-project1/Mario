@@ -7,6 +7,7 @@ import java.util.Random;
 import mario.entity.Entity;
 import mario.state.KoopaState;
 import mario.tile.Tile;
+import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;
 
@@ -15,6 +16,7 @@ public class Koopa extends Entity {
 	private Random random;
 	
 	private int shellCount;
+	private int frame = 0;
 
 	public Koopa(int x, int y, int width, int height, Id id, Handler handler) {
 		super(x, y, width, height, id, handler);
@@ -39,9 +41,22 @@ public class Koopa extends Entity {
 
 	@Override
 	public void render(Graphics g) {
-		if(koopaState==KoopaState.WALKING) g.setColor(Color.GREEN);
-		else g.setColor(new Color(0,128,0));
-		g.fillRect(getX(), getY(), width, height);
+		if(koopaState==KoopaState.WALKING) {
+			if(facing==0) {
+				g.drawImage(Game.koopa[frame+2].getBufferedImage(), x, y,width,height, null );
+			
+			}else if(facing==1){
+				g.drawImage(Game.koopa[frame].getBufferedImage(), x, y,width,height, null );
+			}
+
+		}else {
+			if(facing==0) {
+				g.drawImage(Game.koopa[frame+5].getBufferedImage(), x, y,width,height, null );
+			
+			}else if(facing==1){
+				g.drawImage(Game.koopa[frame+7].getBufferedImage(), x, y,width,height, null );
+			}
+		}
 				
 	}
 
@@ -97,12 +112,12 @@ public class Koopa extends Entity {
 				if(getBoundsLeft().intersects(t.getBounds())){
 					if(koopaState==KoopaState.SPINNING) setVelX(10);
 					else setVelX(2);
-//					facing = 1;
+					facing = 1;
 				}
 				if(getBoundsRight().intersects(t.getBounds())){
 					if(koopaState==KoopaState.SPINNING) setVelX(-10);
 					else setVelX(-2);
-//					facing = 0;
+					facing = 0;
 				}
 			}
 
