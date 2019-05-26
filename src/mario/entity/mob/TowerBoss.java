@@ -7,6 +7,7 @@ import java.util.Random;
 import mario.entity.Entity;
 import mario.state.BossState;
 import mario.tile.Tile;
+import marioTest.Game;
 import marioTest.Handler;
 import marioTest.Id;
 
@@ -18,6 +19,8 @@ public class TowerBoss extends Entity {
 	
 	private Random random;
 
+	private int frame = 0;
+
 	public TowerBoss(int x, int y, int width, int height, Id id, Handler handler, int hp) {
 		super(x, y, width, height, id, handler);
 		this.hp = hp;
@@ -25,15 +28,47 @@ public class TowerBoss extends Entity {
 		bossState = BossState.IDLE;
 		
 		random = new Random();
+		int dir = random.nextInt(2);
+		
+			switch(dir) {
+			case 0:
+				setVelX(-2);
+				facing = 0;
+				break;
+			case 1:
+				setVelX(2);
+				facing = 1;
+
+				break;
+			}
 		}
 
 	@Override
 	public void render(Graphics g) {
-		if(bossState==BossState.IDLE||bossState==BossState.SPINNING) g.setColor(Color.GRAY);
-		else if(bossState==BossState.RECOVERING) g.setColor(Color.RED);
-		else g.setColor(Color.ORANGE);
+		if(bossState==BossState.IDLE||bossState==BossState.SPINNING) {
+			if(facing==0) {
+				g.drawImage(Game.towerBoss[frame ].getBufferedImage(), x, y,width,height, null );
+
+			}else if(facing==1){
+				g.drawImage(Game.towerBoss[frame+1].getBufferedImage(), x, y,width,height, null );
+			}
+
+		}
+		else if(bossState==BossState.RECOVERING) {
+			g.setColor(Color.GRAY);
+			g.fillRect(x, y, width, height);
+			
+		}
+		else { 
+			if(facing==0) {
+				g.drawImage(Game.towerBoss[frame+2].getBufferedImage(), x, y,width,height, null );
+
+			}else if(facing==1){
+				g.drawImage(Game.towerBoss[frame+3].getBufferedImage(), x, y,width,height, null );
+			}
+		}
 		
-		g.fillRect(x, y, width, height);
+		
 				
 	}
 
@@ -106,11 +141,15 @@ public class TowerBoss extends Entity {
 			
 				if(getBoundsLeft().intersects(t.getBounds())){
 					setVelX(0);
+					facing = 1;
+
 					if(bossState==BossState.RUNNING) setVelX(4);
 					x = t.getX()+ t.width;
 				}
 				if(getBoundsRight().intersects(t.getBounds())){
 					setVelX(0);
+					facing = 0;
+
 					if(bossState==BossState.RUNNING) setVelX(-4);
 					x = t.getX()- t.width;
 				}

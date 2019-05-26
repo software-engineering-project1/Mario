@@ -94,6 +94,7 @@ public static int y = 100;
 	public static Sprite[] firePlayer;
 	public static Sprite[] koopa;
 	public static Sprite[] pipe;
+	public static Sprite[] towerBoss;
 
 	public static Sound jump;
 	public static Sound goombastomp;
@@ -139,12 +140,15 @@ public static int y = 100;
 		 firePlayer = new Sprite[8];//10?
 		 koopa = new Sprite[8];
 
+		 towerBoss = new Sprite[4];
 		 levels = new BufferedImage[2];
 		 
 		 for(int i=0; i<player.length;i++) {
 			 player [i] = new Sprite(sheet, i+1, 16);
 		 }
-		 
+		 for(int i=0; i<towerBoss.length;i++) {
+			 towerBoss [i] = new Sprite(sheet, i+6, 2);
+		 }
 		 for(int i=0; i<goomba.length;i++) {
 			 goomba [i] = new Sprite(sheet, i+1, 15);
 		 }
