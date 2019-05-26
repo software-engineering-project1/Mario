@@ -33,9 +33,9 @@ import mariogfx.Sprite;
 public class Game extends Canvas implements Runnable{
 	 //Databses information
 
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/test";
-	private static final String USER_NAME = "root";
-	private static final String PASSWORD = "Liujinyi0328";
+	public static final String DB_URL = "jdbc:mysql://localhost:3306/mario";
+	public static final String USER_NAME = "root";
+	public static final String PASSWORD = "Liujinyi0328";
 	
 	
 	public static int i =0;
@@ -378,10 +378,29 @@ public static int y = 100;
 				try {
 					Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
 					System.out.println("Connected");
-					PreparedStatement pst = conn.prepareStatement("INSERT INTO user VALUES (?,?,?);");
-					pst.setString(1, firstName);
-					pst.setString(2, lastName);
-					pst.setInt(3, score);
+					int random = (int)Math.random()*100000;
+					PreparedStatement pst = conn.prepareStatement("INSERT INTO users VALUES (?,?,?,?,?,?);");
+					PreparedStatement psts = conn.prepareStatement("INSERT INTO userscore VALUES (?,?);");
+					psts.setInt(1, random);
+					psts.setInt(2, score);
+					pst.setInt(1, random);
+					System.out.println(random);
+					pst.setString(2, firstName);
+					System.out.println(firstName);
+					pst.setString(3, lastName);
+					System.out.println(lastName);
+					pst.setInt(6, score);
+					System.out.println(score);
+					PreparedStatement pst1 = conn.prepareStatement("SELECT (@rowNO := @rowNo+1) AS rowno FROM users a,(SELECT @rowNO :=0) b where userId = ? order by score desc;");
+					pst1.setInt(1,random);
+					ResultSet resultSet = pst1.executeQuery();
+					int orderno = 0;
+					while(resultSet.next()) {
+						orderno = resultSet.getInt("rowno");
+					}
+					pst.setInt(4, orderno);
+					System.out.println(orderno);
+					pst.setInt(5, orderno);
 					int affected = pst.executeUpdate();
 					pst.close();
 					System.out.println(affected + " row(s) changed.");
@@ -402,7 +421,7 @@ public static int y = 100;
 					System.out.println("Connected");
 //				Statement st = conn.createStatement();
 //				ResultSet rs = st.executeQuery("SELECT * FROM user");
-				PreparedStatement pstm = conn.prepareStatement("SELECT * FROM user ORDER BY score DESC");
+				PreparedStatement pstm = conn.prepareStatement("SELECT userFirstName, userLastName, score FROM users ORDER BY score DESC;");
 				ResultSet rs = pstm.executeQuery();
 				g.setColor(Color.white);
 				g.drawString("First Name", 100, 50);
@@ -410,8 +429,8 @@ public static int y = 100;
 				g.drawString("Score", 300, 50);
 				
 				while (rs.next()){
-					String fname = rs.getString("fName");
-					String lname = rs.getString("lName");
+					String fname = rs.getString("userFirstName");
+					String lname = rs.getString("userLastName");
 					int score = rs.getInt("score");
 					arr1[j]= fname;
 					arr2[j]=lname;
