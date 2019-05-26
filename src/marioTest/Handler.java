@@ -80,16 +80,16 @@ public class Handler {//a LickedList to add entities
 				int blue = (pixel )&0xff;
 				if(red==0&&blue==0&&green==0) addTile(new Wall(x*32, y*32, 64, 64, true, Id.wall, this));
 				if(red==0&&blue==255&&green==0) addEntity(new Player(x*32, y*32, 48, 48,Id.player, this));//0000ff
-//				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this));//ff0000
+				if(red==255&&green==0&&blue==0) addEntity(new Mushroom(x*32, y*32, 64, 64, Id.mushroom, this, blue ));//ff0000
 				if(red==255&&green==119&&blue==0) addEntity(new Goomba(x*32, y*32, 64, 64, Id.goomba,this));//ff7700
-				if(red==255&&green==119&&blue==0) addEntity(new Koopa(x*32, y*32, 64, 64, Id.koopa,this));
+				if(red==0&&green==128&&blue==128) addEntity(new Koopa(x*32, y*32, 64, 64, Id.koopa,this));//008080
 				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00
-				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*32, y*32, 64, 64*5,true,Id.pipe,this,128-green,true));//ff7700
-				if(red==255&&green==250&&blue==0) addEntity(new Coin(x*32, y*32, 64, 64, Id.coin, this));
-				if(red==255&&green==0&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));
-				if(red==0&&green==255&&blue==0) addTile(new Flag(x*32, y*32, 64, 64*5, true, Id.flag, this));
-				if(red==255&&green==255&&blue==0) addEntity(new PowerStar(x*32, y*32, 64, 64,Id.star,this));
-//				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.flower,2));
+				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*32, y*32, 64, 64*5,true,Id.pipe,this,128-green,true));//ff7700,008000
+				if(red==255&&green==165&&blue==0) addEntity(new Coin(x*32, y*32, 64, 64, Id.coin, this));//FFA500
+				if(red==0&&green==255&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));//00ffff
+				if(red==105&&green==105&&blue==105) addTile(new Flag(x*32, y*32, 64, 64*5, true, Id.flag, this));//696969
+				if(red==169&&green==169&&blue==169) addEntity(new PowerStar(x*32, y*32, 64, 64,Id.star,this));//A9A9A9
+				if(red==255&&green==182&&blue==193) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.flower,this,Game.flower,0));//FFB6C1
 			
 			
 			
