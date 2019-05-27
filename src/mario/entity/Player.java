@@ -199,7 +199,7 @@ public class Player extends Entity {
 					}
 					e.die();
 				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
-					if(!invincible&&getBounds().intersects(e.getBounds())) {
+					if(invincible&&getBounds().intersects(e.getBounds())) {
 						e.die();	
 						Game.score+=2;
 					}else {

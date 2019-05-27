@@ -9,6 +9,8 @@ import marioTest.Id;
 
 public class Fireball extends Entity {
 
+	private int frame=0;
+	private int frameDelay=0;
 	public Fireball(int x, int y, int width, int height, Id id, Handler handler, int facing) {
 		super(x, y, width, height, id, handler);
 		
@@ -24,6 +26,7 @@ public class Fireball extends Entity {
 
 	@Override
 	public void render(Graphics g) {
+	
 		g.drawImage(Game.fireball.getBufferedImage(), getX(), getY(), getWidth(), getHeight(), null);
 	}
 

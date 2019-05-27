@@ -13,6 +13,8 @@ public class Goomba extends Entity{
 
 	private Random random = new Random();
 
+	private int frameDelay=0;
+
 	private int frame = 0;
 	public Goomba(int x, int y, int width, int height, Id id, Handler handler) {
 		super(x, y, width, height, id, handler);
@@ -42,6 +44,15 @@ public class Goomba extends Entity{
 	public  void tick() {
 			x+=velX;
 			y+=velY;
+			frameDelay++;
+			if(frameDelay>=10) {
+				frame++;
+				if(frame>3) {
+					frame=0;
+					
+				}
+				frameDelay=0;
+			}
 			for(int i = 0;i<handler.tile.size();i++) {
 				Tile t = handler.tile.get(i);
 				

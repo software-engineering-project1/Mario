@@ -17,6 +17,7 @@ public class Koopa extends Entity {
 	
 	private int shellCount;
 	private int frame = 0;
+	private int frameDelay=0;
 
 	public Koopa(int x, int y, int width, int height, Id id, Handler handler) {
 		super(x, y, width, height, id, handler);
@@ -42,7 +43,7 @@ public class Koopa extends Entity {
 	@Override
 	public void render(Graphics g) {
 		if(koopaState==KoopaState.WALKING) {
-			if(facing==0) {
+			if(facing==0) {//0--left  1--right
 				g.drawImage(Game.koopa[frame+2].getBufferedImage(), x, y,width,height, null );
 			
 			}else if(facing==1){
@@ -64,6 +65,16 @@ public class Koopa extends Entity {
 	public void tick() {
 		x+=velX;
 		y+=velY;
+		frameDelay++;
+		
+		if(frameDelay>=8) {
+			frame++;
+			if(frame>1) {
+				frame=0;
+				
+			}
+			frameDelay=0;
+		}
 		
 		if(koopaState==KoopaState.SHELL) {
 			setVelX(0);
