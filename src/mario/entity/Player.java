@@ -42,20 +42,20 @@ public class Player extends Entity {
 
 	public void render(Graphics g) {
 		if(state==PlayerState.FIRE) {
-		if(facing==0) {
-			g.drawImage(Game.firePlayer[frame+4].getBufferedImage(), x, y,width,height, null );
+			if(facing==0) {
+				g.drawImage(Game.firePlayer[frame+4].getBufferedImage(), x, y,width,height, null );
 
-		}else if(facing==1){
-			g.drawImage(Game.firePlayer[frame].getBufferedImage(), x, y,width,height, null );
-		}
-	  }else {
+			}else if(facing==1){
+				g.drawImage(Game.firePlayer[frame].getBufferedImage(), x, y,width,height, null );
+			}
+		}else {
 			if(facing==0) {
 				g.drawImage(Game.player[frame+4].getBufferedImage(), x, y,width,height, null );
 
 			}else if(facing==1){
 				g.drawImage(Game.player[frame].getBufferedImage(), x, y,width,height, null );
 			}
-	  }
+		}
 	}
 
 	public void tick() {
@@ -65,8 +65,13 @@ public class Player extends Entity {
 		if(getY()>Game.deathY) die();
 		
 		if(invincible) {
-			if(facing==0) handler.addTile(new Trail(getX(), getY(), getWidth(), getHeight(), false, Id.trail, handler,Game.player[frame+5].getBufferedImage()));
-			else if(facing==1) handler.addTile(new Trail(getX(), getY(), getWidth(), getHeight(), false, Id.trail, handler,Game.player[frame].getBufferedImage()));
+			if(facing==0) {
+				handler.addTile(new Trail(getX(), getY(), getWidth(), getHeight(), false, Id.trail, handler,Game.player[frame+4].getBufferedImage()));
+			
+			}else if(facing==1) {
+				handler.addTile(new Trail(getX(), getY(), getWidth(), getHeight(), false, Id.trail, handler,Game.player[frame].getBufferedImage()));
+			
+			}
 			particleDelay++;
 			if(particleDelay>=3) {
 				handler.addEntity(new Particle(getX()+(random.nextInt(getWidth())), getY()+(random.nextInt(getHeight())), 10, 10, Id.particle, handler));
@@ -77,11 +82,19 @@ public class Player extends Entity {
 				invincible=false;
 				invincibilityTime=0;
 			}
-			if(velX==5) setVelX(8);
-			else if(velX==-5) setVelX(-8);
+			if(velX==5) {
+				setVelX(8);		
+			}else if(velX==-5) { 
+				setVelX(-8);			
+			}
 		}else {
-			if(velX==8) setVelX(5);
-			else if(velX==-8) setVelX(-5);
+			if(velX==8) { 
+				setVelX(5);
+			
+			}else if(velX==-8) {
+				setVelX(-5);
+			
+			}
 		}
 		
 		if(restoring) {
@@ -91,22 +104,15 @@ public class Player extends Entity {
 				restoreTime=0;
 			}
 		}
-//		if (goingDownPipe) {
-//			pixelsTravelled+=velX;
-//		}
-	//if (x<=0) x = 0;
-////		if (y<= 0)y = 0;
-//		if (x+width>=2160) x =2160-width;
-	//	if (y+height>=900) y=900-height;
-	//	if(velX!=0 ) animate= true;
-	//	else animate = false;
-		
-		
+
 //tile for loop
 		for(int i=0;i<handler.tile.size();i++) {
 			Tile t = handler.tile.get(i);
 			if(getBounds().intersects(t.getBounds())) {
-				if(t.getId()==Id.flag) Game.switchLevel();
+				if(t.getId()==Id.flag) {
+					Game.switchLevel();
+				
+				}
 			}
 			if (t.isSolid()&&goingDownPipe==false) {
 				if ( getBoundsTop().intersects(t.getBounds())) {
@@ -176,12 +182,27 @@ public class Player extends Entity {
 						break;
 					}
 					
+				}else if(e.getId()==Id.flower) {
+					
+					if(getBounds().intersects(e.getBounds())&&e.getType()==0) {
+						if(state==PlayerState.SMALL) {
+							int tpX = getX();
+							int tpY = getY();
+							width+=(width/3);
+							height+=(height/3);
+							setX(tpX-width);
+							setY(tpY-height);
+						}
+					state = PlayerState.FIRE;
+					Game.score+=10;
+						
+					}
+					e.die();
 				}else if (e.getId()== Id.goomba||e.getId()==Id.towerBoss||e.getId()==Id.plant) {
-					if(invincible&&getBounds().intersects(e.getBounds())) {
+					if(!invincible&&getBounds().intersects(e.getBounds())) {
 						e.die();	
 						Game.score+=2;
-					}
-					else {
+					}else {
 						if (getBoundsLeft().intersects(e.getBoundsTop())) {
 							if(e.getId()!=Id.towerBoss) {
 								e.die();
@@ -278,22 +299,6 @@ public class Player extends Entity {
 						Game.score+=10;
 						e.die();
 					}
-				}else if(e.getId()==Id.flower) {
-					
-					if(getBounds().intersects(e.getBounds())&&e.getType()==0) {
-						if(state==PlayerState.SMALL) {
-							int tpX = getX();
-							int tpY = getY();
-							width+=(width/3);
-							height+=(height/3);
-							setX(tpX-width);
-							setY(tpY-height);
-						}
-					state = PlayerState.FIRE;
-					Game.score+=10;
-						
-					}
-					e.die();
 				}
 			}
 
@@ -353,18 +358,7 @@ public class Player extends Entity {
 							if(falling) falling=false;
 							goingDownPipe=false;
 						}
-//						if(getBoundsLeft().intersects(t.getBounds())){
-//							setVelX(0);
-//							x = t.getX()+ t.width;
-//							if(falling) falling=false;
-//							goingDownPipe=false;
-//						}
-//						if(getBoundsRight().intersects(t.getBounds())){
-//							setVelX(0);
-//							x = t.getX()- t.width;
-//							if(falling) falling=false;
-//							goingDownPipe=false;
-//						}
+
 					}
 			
 				}

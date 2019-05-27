@@ -67,7 +67,7 @@ public class KeyInput implements KeyListener{
 					en.facing = 1;
 					break;
 				case KeyEvent.VK_SPACE:
-					if(en.state==PlayerState.FIRE&&!fire) {
+					if(en.state!=PlayerState.FIRE&&!fire) {
 					switch (en.facing) {
 					case 0:
 						Game.handler.addEntity(new Fireball(en.getX()-24, en.getY()+12, 24, 24, Id.fireball, Game.handler, en.facing));
@@ -80,9 +80,9 @@ public class KeyInput implements KeyListener{
 						break;
 					}
 				}
-				case KeyEvent.VK_Q:
+				/*case KeyEvent.VK_Q:
 					en.die();
-					break;
+					break;*/
 				}
 			}
 

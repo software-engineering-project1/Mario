@@ -66,24 +66,7 @@ public class PowerStar extends Entity {
 		}
 		
 		//
-/*		for(int i = 0;i<handler.tile.size();i++) {
-			Tile t = handler.tile.get(i);
-			
-				if(getBoundsBottom().intersects(t.getBounds())) {//error:forget the (t.)getBounds() make the brick can't move up and down
-					setVelY(0);
-					if(falling) falling=false;
-				}else if(!falling){
-					falling = true;
-					gravity = 0.8;
-				}
-					
-				if(getBoundsLeft().intersects(t.getBounds())){
-					setVelX(2);
-				}
-				if(getBoundsRight().intersects(t.getBounds())){
-					setVelX(-2);
-				}
-			}*/
+
 
 		
 	}

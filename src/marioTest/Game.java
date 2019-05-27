@@ -124,19 +124,19 @@ public static int y = 100;
 		 
 		 grass = new Sprite(sheet, 1, 1);
 		 mushroom = new Sprite(sheet,2,1);
-		 lifeMushroom = new Sprite(sheet, 6, 1);
-		 coin = new Sprite(sheet, 5, 1);
 		 powerUp = new Sprite(sheet,3,1);
 		 usedPowerUp = new Sprite(sheet,4,1);
+		 coin = new Sprite(sheet, 5, 1);
+		 lifeMushroom = new Sprite(sheet, 6, 1);
 		 star = new Sprite(sheet, 7, 1);
-		 fireball = new Sprite(sheet, 9, 1);
 		 flower = new Sprite(sheet, 8, 1);
+		 fireball = new Sprite(sheet, 10, 1);
 
 		 player = new Sprite[8];
 		 goomba = new Sprite[10];
 		 flag = new Sprite[3];
 		 pipe = new Sprite[2];
-		 particle = new Sprite[6];
+		 particle = new Sprite[8];
 		 firePlayer = new Sprite[8];//10?
 		 koopa = new Sprite[8];
 
@@ -166,7 +166,7 @@ public static int y = 100;
 		 }
 		 
 		 for(int i=0;i<firePlayer.length;i++) {
-			 firePlayer[i] = new Sprite(sheet, i+9, 15);
+			 firePlayer[i] = new Sprite(sheet, i+9, 16);
 		 }
 		 
 		 try {

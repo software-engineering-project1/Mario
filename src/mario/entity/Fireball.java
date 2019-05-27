@@ -44,9 +44,12 @@ public class Fireball extends Entity {
 				}else if(!falling&&!jumping) {
 					falling=true;
 					gravity=1.0;
+				}else {
+					jumping=false;
+					falling=true;
 				}
 			}
-			}
+		}
 		
 		for(int i=0;i<handler.entity.size();i++) {
 			Entity e = handler.entity.get(i);
