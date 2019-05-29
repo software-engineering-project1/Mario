@@ -55,7 +55,7 @@ public static int y = 100;
 	private static int level=0;
 	
 	public static int coins = 0;
-	public static int lives = 1;
+	public static int lives = 5;
 	public static int deathScreenTime = 0;
 	public static int deathY = 0;
 	public static int score = 0;
@@ -251,7 +251,10 @@ public static int y = 100;
 		
 		if(!showDeathScreen) {
 		g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
-		
+		g.drawImage(coin.getBufferedImage(), 20, 20, 75, 75, null);
+		g.setColor(Color.white);
+		  g.setFont(new Font("Courier",Font.BOLD,20));
+		  g.drawString("x"+coins,100,95);
 		}
 		if(showDeathScreen) {
 			g.setColor(Color.BLACK);
@@ -262,10 +265,11 @@ public static int y = 100;
 			g.setFont(new Font("Courier",Font.BOLD,50));
 			g.drawString("x"+lives, 610, 400);
 			}else {   
-				Game.score();				
+								
 				g.setColor(Color.WHITE);
 				g.setFont(new Font("Courier",Font.BOLD,50));
 				g.drawString("Game Over :(", 300, 400);
+				Game.score();
 				}
 
 			}
@@ -382,14 +386,16 @@ public static int y = 100;
 			  //input of user   
 			    String firstName = JOptionPane.showInputDialog("Please enter your first name");
 				String lastName = JOptionPane.showInputDialog("Please enter your last name");
+				String id = JOptionPane.showInputDialog("Please enter your player ID");
 			  //insert data into database
 				try {
 					Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
 					System.out.println("Connected");
-					PreparedStatement pst = conn.prepareStatement("INSERT INTO user VALUES (?,?,?);");
+					PreparedStatement pst = conn.prepareStatement("INSERT INTO user VALUES (?,?,?,?);");
 					pst.setString(1, firstName);
 					pst.setString(2, lastName);
-					pst.setInt(3, score);
+					pst.setInt(3, Integer.parseInt(id));
+					pst.setInt(4, score);
 					int affected = pst.executeUpdate();
 					pst.close();
 					System.out.println(affected + " row(s) changed.");
@@ -437,7 +443,7 @@ public static int y = 100;
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			for(int i=0;i<arr1.length;i++) {
+			for(int i=0;arr1[i]!=null;i++) {
 				g.drawString(String.valueOf(i+1), 50, y);
 				g.drawString(arr1[i], 100, y);
 				g.drawString(arr2[i], 200, y);
