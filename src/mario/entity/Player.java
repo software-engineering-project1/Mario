@@ -203,7 +203,7 @@ public class Player extends Entity {
 						e.die();	
 						Game.score+=2;
 					}else {
-						if (getBoundsLeft().intersects(e.getBoundsTop())) {
+						if (getBoundsBottom().intersects(e.getBoundsTop())) {
 							if(e.getId()!=Id.towerBoss) {
 								e.die();
 								Game.score+=20;
@@ -223,7 +223,17 @@ public class Player extends Entity {
 								gravity=3.5;
 							}
 						}else if (getBounds().intersects(e.getBounds())) {
-							if (state==PlayerState.BIG) {
+//							if (state==PlayerState.BIG) {
+//								takeDamage();
+//							}
+//							else if (state==PlayerState.SMALL) {
+//								die();	
+//							}
+//							takeDamage();
+							if (state==PlayerState.SMALL) {
+								die();
+							}
+							else if(state==PlayerState.BIG) {
 								takeDamage();
 							}
 					}
@@ -368,31 +378,32 @@ public class Player extends Entity {
 
 	}
 	
-public void takeDamage() {
-	
-	if(restoring) return;
-	
-	if(state==PlayerState.SMALL) {
-		die();
-		return;
-	}else if(state==PlayerState.BIG) {
-		width-=(width/4);
-		height-=(height/4);
-		x+=width/4;
-		y+=height/4;
+
+	public void takeDamage() {
 		
-		state=PlayerState.SMALL;
-		Game.damage.play();
-		restoring=true;
-		restoreTime=0;
-		return;
-	}else if(state==PlayerState.FIRE) {
-		state=PlayerState.BIG;
-		Game.damage.play();
-		restoring=true;
-		restoreTime=0;
-		return;
+		if(restoring) return;
+		
+		if(state==PlayerState.SMALL) {
+			die();
+			return;
+		}else if(state==PlayerState.BIG) {
+			width-=(width/4);
+			height-=(height/4);
+			x+=width/4;
+			y+=height/4;
+			
+			state=PlayerState.SMALL;
+			Game.damage.play();
+			restoring=true;
+			restoreTime=0;
+			return;
+		}else if(state==PlayerState.FIRE) {
+			state=PlayerState.BIG;
+			Game.damage.play();
+			restoring=true;
+			restoreTime=0;
+			return;
+		}
 	}
-}
 	
 }
