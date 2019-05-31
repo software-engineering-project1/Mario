@@ -18,7 +18,7 @@ public class Pipe extends Tile{
 
 
 	public void render(Graphics g) {
-g.drawImage(Game.pipe[0].getBufferedImage(), x, y, width, 64, null);
+		g.drawImage(Game.pipe[0].getBufferedImage(), x, y, width, 64, null);
 		
 		g.drawImage(Game.pipe[1].getBufferedImage(), x, y+64, width, 64, null);
 		g.drawImage(Game.pipe[1].getBufferedImage(), x, y+128, width, 64, null);

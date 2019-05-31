@@ -33,7 +33,7 @@ import mariogfx.Sprite;
 public class Game extends Canvas implements Runnable{
 	 //Databses information
 
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/test";
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/mario";
 	private static final String USER_NAME = "root";
 	private static final String PASSWORD = "Liujinyi0328";
 	
@@ -55,7 +55,7 @@ public static int y = 100;
 	private static int level=0;
 	
 	public static int coins = 0;
-	public static int lives = 5;
+	public static int lives = 1;
 	public static int deathScreenTime = 0;
 	public static int deathY = 0;
 	public static int score = 0;
@@ -378,30 +378,49 @@ public static int y = 100;
 			    jf.getContentPane().setBackground(Color.BLACK);
 			    jf.setVisible(true);
 			    Graphics g = jf.getContentPane().getGraphics();
-			    g.setColor(Color.WHITE);
-//			    g.drawOval(100, 100, 50, 50);
+			    g.setColor(Color.black);
+			    g.drawOval(100, 100, 50, 50);
+			    g.setColor(Color.white);
 			    g.drawString("First Name", 100, 50);
 				g.drawString("Last Name", 200, 50);
 				g.drawString("Score", 300, 50);
-			  //input of user   
-			    String firstName = JOptionPane.showInputDialog("Please enter your first name");
-				String lastName = JOptionPane.showInputDialog("Please enter your last name");
-				String id = JOptionPane.showInputDialog("Please enter your player ID");
-			  //insert data into database
-				try {
-					Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-					System.out.println("Connected");
-					PreparedStatement pst = conn.prepareStatement("INSERT INTO user VALUES (?,?,?,?);");
-					pst.setString(1, firstName);
-					pst.setString(2, lastName);
-					pst.setInt(3, Integer.parseInt(id));
-					pst.setInt(4, score);
-					int affected = pst.executeUpdate();
-					pst.close();
-					System.out.println(affected + " row(s) changed.");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+//              input of user
+                String firstName = JOptionPane.showInputDialog("Please enter your first name");
+                String lastName = JOptionPane.showInputDialog("Please enter your last name");
+                String id = JOptionPane.showInputDialog("Please enter your ID");
+              //insert data into database
+                try {
+                    Connection conn = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+                    System.out.println("Connected");
+                    int random = Integer.parseInt(id);
+                    PreparedStatement pst = conn.prepareStatement("INSERT INTO users VALUES (?,?,?,?,?,?);");
+                    PreparedStatement psts = conn.prepareStatement("INSERT INTO userscore VALUES (?,?);");
+                    psts.setInt(1, random);
+                    psts.setInt(2, score);
+                    pst.setInt(1, random);
+                    System.out.println(random);
+                    pst.setString(2, firstName);
+                    System.out.println(firstName);
+                    pst.setString(3, lastName);
+                    System.out.println(lastName);
+                    pst.setInt(6, score);
+                    System.out.println(score);
+                    PreparedStatement pst1 = conn.prepareStatement("SELECT (@rowNO := @rowNo+1) AS rowno FROM users a,(SELECT @rowNO :=0) b where userId = ? order by score desc;");
+                    pst1.setInt(1,random);
+                    ResultSet resultSet = pst1.executeQuery();
+                    int orderno = 0;
+                    while(resultSet.next()) {
+                        orderno = resultSet.getInt("rowno");
+                    }
+                    pst.setInt(4, orderno);
+                    System.out.println(orderno);
+                    pst.setInt(5, orderno);
+                    int affected = pst.executeUpdate();
+                    pst.close();
+                    System.out.println(affected + " row(s) changed.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 				
 				
 				String arr1[] = new String[100];
@@ -416,25 +435,26 @@ public static int y = 100;
 					System.out.println("Connected");
 //				Statement st = conn.createStatement();
 //				ResultSet rs = st.executeQuery("SELECT * FROM user");
-				PreparedStatement pstm = conn.prepareStatement("SELECT * FROM user ORDER BY score DESC");
+				PreparedStatement pstm = conn.prepareStatement("SELECT userFirstName, userLastName, score FROM users ORDER BY score DESC;");
 				ResultSet rs = pstm.executeQuery();
+//				g = jf.getContentPane().getGraphics();
 				g.setColor(Color.white);
 				g.drawString("First Name", 100, 50);
 				g.drawString("Last Name", 200, 50);
 				g.drawString("Score", 300, 50);
 				
 				while (rs.next()){
-					String fname = rs.getString("fName");
-					String lname = rs.getString("lName");
+					String fname = rs.getString("userFirstName");
+					String lname = rs.getString("userLastName");
 					int score = rs.getInt("score");
 					arr1[j]= fname;
 					arr2[j]=lname;
 					arr3[j]=String.valueOf(score);
 					j++;
-//				    g.drawString(fname, 100, y);
-//				    g.drawString(lname, 200, y);
-//				    g.drawString(String.valueOf(score), 300, y);
-//				    y+=15;
+				    g.drawString(fname, 100, y);
+				    g.drawString(lname, 200, y);
+				    g.drawString(String.valueOf(score), 300, y);
+				    y+=15;
 					System.out.println(fname + "\t" + lname + 	"\t" + score );
 				}
 				rs.close();
@@ -443,16 +463,22 @@ public static int y = 100;
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+				g=jf.getContentPane().getGraphics();
+				g.setColor(Color.red);
+				g.drawOval(50, 200, 50, 50);
 			for(int i=0;arr1[i]!=null;i++) {
+				System.out.println(arr1[i]+arr2[i]+arr3[i]);
+			
 				g.drawString(String.valueOf(i+1), 50, y);
-				g.drawString(arr1[i], 100, y);
+				g.drawString("arr1[i]", 100, y);
 				g.drawString(arr2[i], 200, y);
 				g.drawString(arr3[i], 300, y);
 				y+=15;
 			}
 			Game.i++;
 		}
-	}
+		}
+
 
 	
 	public static void main(String[] args) {

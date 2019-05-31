@@ -350,10 +350,6 @@ public class Player extends Entity {
 						case 2:
 							setVelY(-5);
 							setVelX(0);
-//							setY(273);
-//							setX(273);
-//							System.out.println(x);
-//							System.out.println(y);
 							pixelsTravelled+=velY;
 							break;
 						}
@@ -368,11 +364,8 @@ public class Player extends Entity {
 							if(falling) falling=false;
 							goingDownPipe=false;
 						}
-
-					}
-			
-				}
-			
+					}		
+				}			
 			}
 		
 

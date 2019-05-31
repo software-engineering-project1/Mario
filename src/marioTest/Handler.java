@@ -86,7 +86,7 @@ public class Handler {//a LickedList to add entities
 				if(red==255&&green==255&&blue==0) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.lifeMushroom,1));//ffff00
 				if(red==0&&(green>123&&green<129)&&blue==0) addTile(new Pipe(x*32, y*32, 64, 64*5,true,Id.pipe,this,128-green,true));//ff7700,008000
 				if(red==255&&green==165&&blue==0) addEntity(new Coin(x*32, y*32, 64, 64, Id.coin, this));//FFA500
-				if(red==0&&green==255&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));//00ffff
+//				if(red==0&&green==255&&blue==255) addEntity(new TowerBoss(x*32, y*32, 64, 64, Id.towerBoss, this, 3));//00ffff
 				if(red==105&&green==105&&blue==105) addTile(new Flag(x*32, y*32, 64, 64*5, true, Id.flag, this));//696969
 //				if(red==169&&green==169&&blue==169) addEntity(new PowerStar(x*32, y*32, 64, 64,Id.star,this));//A9A9A9
 				if(red==255&&green==182&&blue==193) addTile(new PowerUpBlock(x*32, y*32, 64, 64,true, Id.powerUp,this,Game.flower,0));//FFB6C1
